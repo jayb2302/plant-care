@@ -1,4 +1,3 @@
-
 <template>
   <div class="main bg-slate-100 w-full h-screen" v-if="isLoggedIn">
     <h1>Admin Home</h1>
@@ -6,43 +5,47 @@
     <button id="btn-out" @click="handleSignOut">
       <p>Sign out</p>
     </button>
-    <div class="sites-list">
-      <h2 class="text-2xl text-center">Sites</h2>
-      <ul>
-        <li v-for="site in sites" :key="site.id">
-          <router-link :to="{ name: 'siteDetail', params: { id: site.id } }">
-            {{ site.name }}
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div class="wrapper flex">
-      <div class="wrapper flex">
-      <NewPlantForm @image-uploaded="handleImageUploaded" />
-      
-      <div class="plants-list flex flex-col w-1/2">
-        <h2 class="text-2xl text-center">My Plants</h2>
-        <div class="flex flex-col" v-for="myplant in myplants" :key="myplant.id">
-          <img :src="myplant.imgURL" alt="plant image">
-          <h3>{{ myplant.name }}</h3>
-          <h3>{{ myplant.location }}</h3>
-          <h3>{{ myplant.description }}</h3>
-          <button class="delete-btn" @click="fbDeleteSinglePlant(myplant.id)">Delete Plant</button>
-        </div>      
-        </div>
-    </div>
     
+    <!-- Two-column layout -->
+    <div class="dashboard flex">
+      <!-- Left column -->
+      <div class="left-column">
+        <!-- Button to create a new site -->
+        <button @click="navigateToCreateSite">Create a Site</button>
 
-    
-      
+        <!-- List of user sites -->
+        <div class="sites-list">
+          <h2 class="text-2xl text-center">Sites</h2>
+          <ul>
+            <li v-for="site in sites" :key="site.id">
+              <router-link :to="{ name: 'siteDetail', params: { id: site.id } }">
+                {{ site.name }}
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div class="right-column">
+        <div class="plants-list">
+          <h2 class="text-2xl text-center">My Plants</h2>
+          <!-- Display user's plants here -->
+        </div>
+      </div>
     </div>
-    
   </div>
+
+   <!-- Site Selection Modal -->
+   <SiteSelectionModal v-if="showModal" @closeModal="showModal = false" :onConfirm="handleSiteSelection" />
+
+
   <div v-else class="w-screen flex-col justify-center">
     <p class="p-tag text-center">Please log in to access this page.</p>
     <button id="btn-in" class="w-screen" @click="redirectToSignIn">Log In</button>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import {
@@ -50,9 +53,15 @@ import {
   onAuthStateChanged,
   signOut
 } from "firebase/auth";
-import { db } from '../firebase.js';
 import { useSites } from '../modules/site.js';
-import { myplants, getPlantsData, addPlant, deletePlant } from '../modules/myplant.js';
+import router from '../router/index.js';
+import SiteSelectionModal from '../components/SiteSelectionModal.vue'; // Adjust the path
+
+const showModal = ref(false); // To control the visibility of the modal
+
+const navigateToCreateSite = () => {
+  showModal.value = true; // Show the modal when creating a new site
+};
 
 const { sites } = useSites();
 
@@ -60,7 +69,6 @@ const redirectToSignIn = () => {
   router.push('/signin');
 };
 
-let newPlantImgURL = ref('https://placehold.co/600x400');
 let isLoggedIn = ref(false);
 
 let auth;
@@ -82,25 +90,30 @@ const handleSignOut = () => {
     });
 };
 
-const handleImageUploaded = (imgURL) => {
-  newPlantImgURL.value = imgURL;
+const handleSiteSelection = (selectedSite) => {
+  // Handle the selected site in the parent component
+  console.log("Selected Site:", selectedSite);
+
+  // Close the modal if needed
+  showModal.value = false;
 };
 
 </script>
 
-
 <style lang="scss" scoped>
-.bg {
-    width: 100%;
-    border: 1px solid red;
+
+/* Your styling for columns goes here */
+.dashboard {
+  display: flex;
 }
 
-.delete-btn {
-    background-color: red;
-    color: white;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 5px;
+.left-column {
+  /* Styling for the left column */
+  margin: 0 auto;
+}
+
+.right-column {
+  /* Styling for the right column */
+  margin: 0 auto;
 }
 </style>
-```

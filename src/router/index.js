@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import SiteDetail from '../components/SiteDetail.vue'
+
 import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({
@@ -16,11 +16,7 @@ const router = createRouter({
       name: 'about',
       component: AboutView
     },
-    {
-      path: '/site/:id',
-      name: 'siteDetail',
-      component: SiteDetail,
-    },
+   
     {
       path: '/register',
       name: 'register',
@@ -44,6 +40,23 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AdminHome.vue')
+    },
+    {
+      path: '/createsite',
+      name: 'createsite',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../components/CreateSite.vue')
+    }
+    ,
+    {
+      path: '/siteselection',
+      name: 'siteSelection',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../components/SiteSelectionModal.vue')
     }
   ]
 })

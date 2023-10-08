@@ -16,7 +16,7 @@
     "firebase-functions": "^4.4.1",
     "har-validator": "^5.1.5",
     "uuid": "^9.0.0",
-    "vue": "^3.3.4",
+    "vue": "^3.2.36",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
