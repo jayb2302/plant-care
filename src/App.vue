@@ -5,15 +5,11 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <div class="main">
     <header>
-
       <div class="wrapper">
-      
-
         <nav>
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/signin">SignIn</RouterLink>
           <RouterLink to="/about">About</RouterLink>
-          
         </nav>
       </div>
     </header>
@@ -22,11 +18,17 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style scoped lang="scss">
-
+/* Color Theme Swatches in Hex */
+$mutedPink-hex: #F2BDC7;
+$darkPink-hex: #F288AF;
+$mutedBlue-hex: #59D9CC;
+$darkBrown: #4C393B;
+$brightYellow: #FFEA70;
+$heading-color: #30382d;
 
 header {
   line-height: 1.5;
-  height: 100px;
+  
 }
 
 

@@ -1,7 +1,7 @@
 
 
 <template>
-  <main class="home-wrapper w-sceen flex flex-column">
+  <main class="home-wrapper flex flex-column">
     <div class="heading-container">
       <h2>Do you</h2>
       <h1>Plant</h1>
@@ -9,9 +9,9 @@
     </div>
     
   </main>
-  <div class="btn-container w-full flex justify-center">
-    <div class="btn-yes  ">
-      <button @click="goToLogin">
+  <div class="btn-container  flex justify-center">
+    <div class="btn-yes">
+      <button @click="showSignInModal">
         <div class="icon-1">
           <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 58.56 116.18" class="common-svg" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
             <defs></defs>
@@ -56,29 +56,42 @@
         </div>
       </button>
     </div>
+    <Teleport to="main">
+      <div class="modal" v-if="showModal">
+        <div class="modal-content"> 
+        <!-- Render SignIn.vue component here -->
+          <SignIn @close="closeModal" />
+        </div>
+      </div>
+    </Teleport>
+    
   </div>
 </template>
 
 <script setup>
-import router from '../router';
+import {ref} from 'vue';
+import SignIn from '../components/SignIn.vue';
 
-// Function to navigate to the login page
-const goToLogin = () => {
-  router.push('/signin');
+const showModal = ref(false); // This variable controls the modal visibility
+
+const showSignInModal = () => {
+  // Set a reactive variable to indicate that the modal should be shown
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
 };
 
 // Function to redirect to the YouTube link
 const goToYoutube = () => {
   // Redirect the user to the YouTube link.
-  window.location.href = 'https://youtu.be/6HNoPB_cTwE?si=-eHfsw-ALItePszu';
+  window.open('https://youtu.be/6HNoPB_cTwE?si=-eHfsw-ALItePszu', '_blank');
 };
 </script>
 
 <style lang="scss">
-$heading-font: 'timberline', sans-serif;
-$heading-color: #30382d;
-$heading-size: 5rem;
-$sub-heading-font: 'barber-outline', sans-serif;
+
 
 .common-svg {
     shape-rendering: geometricPrecision;
@@ -86,8 +99,7 @@ $sub-heading-font: 'barber-outline', sans-serif;
     image-rendering: optimizeQuality;
     fill-rule: evenodd;
     clip-rule: evenodd;
-  }
-  
+} 
 .home-wrapper {
   background-image: url('../assets/img/headingbg.png');
   background-color: transparent;
@@ -144,7 +156,7 @@ $sub-heading-font: 'barber-outline', sans-serif;
     }
     h3 { 
       position: absolute;
-     bottom: 25%;
+     bottom: 35%;
      right: 27%;
      text-shadow: 3px 3px 1px  #000, 3px 3px 1px #000,
       3px 3px 1px  #000, 3px 3px 1px #000;
@@ -238,4 +250,27 @@ $sub-heading-font: 'barber-outline', sans-serif;
 
   
 }
+
+
+.modal {
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+  z-index: 9999; /* Ensure the modal is above other content */
+  .modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 80%; /* Set a maximum width for the modal */
+  }
+}
+
+
 </style>

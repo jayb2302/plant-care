@@ -10,7 +10,16 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@fortawesome/fontawesome-svg-core': '@fortawesome/fontawesome-svg-core',
+
     }
-  }
+  },
+  css: {
+    preprocessorOptions: {
+        scss: {
+            additionalData: `@import "@/assets/scss/global.scss";`,
+        },
+    },
+  },  
 })

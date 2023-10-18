@@ -8,23 +8,7 @@
     
     <!-- Two-column layout -->
     <div class="dashboard flex">
-      <!-- Left column -->
-      <div class="left-column">
-        <!-- Button to create a new site -->
-        <button @click="navigateToCreateSite">Create a Site</button>
-
-        <!-- List of user sites -->
-        <div class="sites-list">
-          <h2 class="text-2xl text-center">Sites</h2>
-          <ul>
-            <li v-for="site in sites" :key="site.id">
-              <router-link :to="{ name: 'siteDetail', params: { id: site.id } }">
-                {{ site.name }}
-              </router-link>
-            </li>
-          </ul>
-        </div>
-      </div>
+  
 
       <!-- Right column -->
       <div class="right-column">
@@ -53,17 +37,12 @@ import {
   onAuthStateChanged,
   signOut
 } from "firebase/auth";
-import { useSites } from '../modules/site.js';
 import router from '../router/index.js';
 import SiteSelectionModal from '../components/SiteSelectionModal.vue'; // Adjust the path
 
 const showModal = ref(false); // To control the visibility of the modal
 
-const navigateToCreateSite = () => {
-  showModal.value = true; // Show the modal when creating a new site
-};
 
-const { sites } = useSites();
 
 const redirectToSignIn = () => {
   router.push('/signin');
