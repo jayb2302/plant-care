@@ -1,13 +1,22 @@
 <template>
-   <div class="admin-home-container min-h-full">
+  <div class="admin-home-container min-h-full">
     <Disclosure as="nav" class="bg-gray-700" v-slot="{ open }">
     <!-- Navbar Container-->
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex rb h-16 items-center justify-between">
+        <div class="flex  h-16 items-center justify-between">
           <div class="flex items-center">
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
-                <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                <router-link
+                  v-for="item in navigation"
+                  :key="item.name"
+                  :to="{ name: item.routeName }"
+                  :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']"
+                  :aria-current="item.current ? 'page' : undefined"
+                >
+                  {{ item.name }}
+                </router-link>              
+   <!-- <a v-for="item in navigation" :key="item.name" :href="item.routeName" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a> -->
               </div>
             </div>
           </div>
@@ -88,7 +97,7 @@
       </DisclosurePanel>
     </Disclosure>
     <header class="bg-white shadow">
-  <div class="mx-auto flex  gap-4 max-w-7xl mt-3 px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mx-auto flex  gap-4 max-w-7xl mt-3 px-4 py-6 sm:px-6 lg:px-8">
     <h1 class="text-3xl font-bold tracking-tight text-gray-900">My Home</h1>
     <button class="button text-slate-500" @click="showAddPlantModal = true">
       <img  class="leaf" src="../assets/img/twoleaves.svg" style="width: 40px; height: 40px;" alt="">
@@ -142,37 +151,22 @@
       </Teleport>
     </div>
  
-</header>
-   
-  <main class="bg-white shadow mt-3 h-screen rb">
+  </header>
+ 
+  <main class="bg-white shadow mt-3 rb">
       <div>
-    <!-- Display the list of sites -->
-    <div v-for="site in sites" :key="site.id" @click="selectSite(site)">
-      <h2 class="text-slate-500">{{ site.name }}</h2>
-    </div>
-
-    <!-- Display the list of plants for the selected site -->
-    <div v-for="plant in plants" :key="plant.id">
-      {{ plant.name }}
-    </div>
+        Current Route: {{ $route.name }}
+        
     </div>
       
   </main>
   
   </div>
-  <!-- <div class="about">
-    <h1>This is an about page</h1>
-    <div v-for="plant in newPlantName" :key="plant.id">
-      <h2>{{ plant.common_name }}</h2>
-      
-      <img :src="plant.default_image ? plant.default_image.small_url : ''" alt="Plant Image" />
-    </div>
-  </div> -->
+
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { fetchPlants } from '../modules/plantapi'; // Adjust the import path
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { onAuthStateChanged, getAuth } from 'firebase/auth'
@@ -200,7 +194,7 @@ const selectSite = (site) => {
   // Fetch plants associated with the selected site
   fetchPlantsForSelectedSite(site.id);
 };
-
+console.log(selectSite)
 const fetchPlantsForSelectedSite = async (siteId) => {
   const plantsCollection = collection(db, 'plants'); // Replace 'plants' with your Firestore collection name
   const plantsQuery = query(plantsCollection, where('siteId', '==', siteId));
@@ -208,7 +202,7 @@ const fetchPlantsForSelectedSite = async (siteId) => {
   plants.value = plantsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };
 
-const newPlantName = ref([]);
+
 const showAddPlantModal = ref(false);
 const showAddSiteModal = ref(false);
 
@@ -229,13 +223,14 @@ const handleModalClose = () => {
   showAddSiteModal.value = false;
 };
 
+
+
 const navigation = [
-  { name: 'My Home', href: '#', current: true },
-  { name: 'Sites', href: '#', current: false },
-  { name: 'My plants', href: '#', current: false },
-  { name: 'Schedule', href: '#', current: false },
-  
-]
+  { name: 'My Home', routeName: 'home', current: true },
+  { name: 'Sites', routeName: 'mysitesview', current: false },
+  // { name: 'My plants', routeName: 'my-plants', current: false },
+  // { name: 'Schedule', routeName: 'schedule', current: false },
+];
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
@@ -243,7 +238,8 @@ const userNavigation = [
 ]
 onMounted(async () => {
   try {
-    newPlantName.value = await fetchPlants();
+    await Promise.resolve()
+    // newPlantName.value = await fetchPlants();
   } catch (error) {
     // Handle the error, e.g., show an error message to the user
     console.error(error);

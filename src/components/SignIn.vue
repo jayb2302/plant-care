@@ -46,7 +46,7 @@
 </template>
 <script setup>
     import { ref as refVue } from "vue"
-    import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+    import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
     import { useRouter } from 'vue-router'
     import RegisterNew from "../views/RegisterNew.vue"
 

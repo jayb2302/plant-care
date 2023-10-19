@@ -1,31 +1,41 @@
 <template>
   <div class="modal flex flex-col gap-3">
-
-    <button class="button" @click="$emit('close')">Close</button>
+    <div class="modal-content">
+      <h2 class="h2 text-center">Add a new plant</h2>
+      <button class="button" @click="$emit('close')">Close</button>
     <!-- Modal content for adding a new plant -->
-    <div class="plant-selection">
-      <input
-        type="text"
-        class="search__input"
-        v-model="searchQuery"
-        @input="fetchPlant"
-        placeholder="Search for a plant..."
-      />
+      <div class="plant-selection ">
+        <input
+          type="text"
+          class="search__input"
+          v-model="searchQuery"
+          @input="handleInput"
+          placeholder="Search for a plant..."
+        />
 
-      <ul class="suggestions">
-        <li v-for="suggestion in filteredPlantData" :key="suggestion.id" @click="selectPlant(suggestion)">
-          {{ suggestion.common_name }}
-        </li>
-      </ul>
+
+    
+        <ul v-if="!selectedPlant" class="suggestions">
+          <li v-if="!plantResults.length">
+            No results, please type in the input
+          </li>
+          <template v-else>
+            <li v-for="plant in plantResults" :key="plant.id" @click="selectPlant(plant)">
+              {{ plant.common_name }}
+            </li>
+          </template>
+        </ul>
+
 
       <div v-if="selectedPlant">
         <h3>{{ selectedPlant.common_name }}</h3>
-        <p>{{ selectedPlant.details.scientific_name }}</p>
-        <img :src="selectedPlant.image_url" alt="Plant Image" />
-        <p>Water Frequency: {{ selectedPlant.details.watering_general_benchmark }}</p>
-        <p>Light Conditions: {{ selectedPlant.details.light_conditions }}</p>
-        <p>Care Level: {{ selectedPlant.details.care_level }}</p>
+        <p>{{ selectedPlant.scientific_name.join(', ') }}</p>
+        <img :src="selectedPlant.default_image.medium_url" alt="Plant Image" />
+        <p>Water Frequency: {{ selectedPlant.watering_general_benchmark.value }} {{ selectedPlant.watering_general_benchmark.unit }}</p>
+        <p>Light Conditions: {{ selectedPlant.sunlight.join(', ') }}</p>
+        <p>Care Level: {{ selectedPlant.care_level }}</p>
         <button @click="confirmPlantSelection">Confirm</button>
+        <button @click="unselectPlant">Unselect plant</button>
       </div>
     </div>
     <!-- You can add your form elements and UI here -->
@@ -42,54 +52,63 @@
       <button class="button" @click="onConfirm">Confirm</button>
      
     </div>
+    </div>
+
+   
   </div>
 </template>
 
 
 <script setup>
-import { ref, onMounted, computed, } from 'vue'; // Import defineProps
+import { ref, onMounted, } from 'vue'; // Import defineProps
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
-import { fetchPlants } from '../modules/plantapi';
+import { getPlantList, getPlantById } from '../modules/plantapi';
+import { debounce } from 'lodash';
+
 
 const searchQuery = ref('');
 const selectedPlant = ref(null);
-const data = ref([]);
+const selectedSite = ref('');
+const sites = ref([]);
+const plantResults = ref([])
 
+const performSearchRequest = async () => {
+  const data = await getPlantList({
+    q: searchQuery.value
+  })
 
+  plantResults.value = data
+}
 
-const filteredPlantData = computed(() => {
-  return data.value.filter((plant) => {
-    return plant.common_name.toLowerCase().includes(searchQuery.value.toLowerCase());
-  });
-});
+const handleInput = debounce(() => {
+    performSearchRequest()
+}, 300)
 
-const fetchPlantData = async () => {
-  try {
-    const plants = await fetchPlants();
-    data.value = plants;
-  } catch (error) {
-    console.error(`Error fetching plant data: ${error.message}`);
-  }
+const selectPlant = async (plant) => {
+  const data = await getPlantById(plant.id)
+  selectedPlant.value = data;
 };
 
-onMounted(fetchPlantData);
+const unselectPlant = () => {
+  selectPlant.value = null
+}
 
-const selectPlant = (plant) => {
-  selectedPlant.value = plant;
-};
+
 
 const confirmPlantSelection = async () => {
-  if (selectedPlant.value) {
+  if (selectedPlant.value && selectedSite.value) {
     try {
       const plantCollection = collection(db, 'plants');
       const newPlantDoc = await addDoc(plantCollection, {
         common_name: selectedPlant.value.common_name,
-        scientific_name: selectedPlant.value.details.scientific_name, // Corrected reference
-        image_url: selectedPlant.value.image_url,
-        water_frequency: selectedPlant.value.details.watering_general_benchmark, // Corrected reference
-        light_conditions: selectedPlant.value.details.light_conditions, // Corrected reference
+        scientific_name: selectedPlant.value.scientific_name, // Corrected reference
+        image_url: selectedPlant.value.default_image.medium_url,
+        water_frequency: selectedPlant.value.watering_general_benchmark, // Corrected reference
+        light_conditions: selectedPlant.value.sunlight, // Corrected reference
         care_level: selectedPlant.value.details.care_level, // Corrected reference
+        // Reference fyrir hvaða herbergi
+        siteId: selectedSite.value.id
       });
 
       console.log('Plant added with ID: ', newPlantDoc.id);
@@ -99,13 +118,6 @@ const confirmPlantSelection = async () => {
     }
   }
 };
-
-
-
-
-
-const selectedSite = ref('');
-const sites = ref([]);
 
 const fetchSites = async () => {
   try {
@@ -120,9 +132,6 @@ const fetchSites = async () => {
     console.error('Error fetching sites: ', error);
   }
 };
-console.log('Sites: ', sites.value);
-
-onMounted(fetchSites);
 
 
 const onConfirm = () => {
@@ -130,10 +139,26 @@ const onConfirm = () => {
   console.log('Confirm button clicked');
 };
 
+onMounted(fetchSites);
+
 </script>
 
 <style lang="scss">
-
+.modal-content {
+        background-color: $darkPink;
+        background-image: url('../assets/img/plantcarebg.png');
+        background-size: contain;
+        background-position-y: 50%;
+        width: 100%;
+        .h2{
+            color: $white;
+            font-family: $heading-font;
+            font-weight: 400;
+            font-size: 5rem;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5), 0 0 1em rgba(0, 0, 0, 0.5);
+        }
+        
+    }
 .button {
   position: relative;
   cursor: pointer;
