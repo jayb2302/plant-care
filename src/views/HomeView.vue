@@ -3,9 +3,17 @@
 <template>
   <main class="home-wrapper flex flex-column">
     <div class="heading-container">
-      <h2>Do you</h2>
+      <svg class="">
+        <text x="30%" y="30%" dy=".35em" text-anchor="middle">
+          Do you
+        </text>
+      </svg>
       <h1>Plant</h1>
-      <h3>Care ?</h3>
+      <svg>
+        <text x="70%" y="60%" dy=".35em" text-anchor="middle">
+          Care ?
+        </text>
+      </svg>
     </div>
     
   </main>
@@ -57,12 +65,36 @@
       </button>
     </div>
     <Teleport to="main">
-      <div class="modal" v-if="showModal">
-        <div class="modal-content"> 
-        <!-- Render SignIn.vue component here -->
-          <SignIn @close="closeModal" />
+      <transition 
+        v-motion
+        :initial="{
+          opacity: 0,
+          y: 0,
+        }"
+        :variants="{ custom: { scale: 3 } }"
+        :enter="{
+          opacity: 1,
+          y: 0,
+        }" 
+        
+      >
+        <div class="modal" v-if="showModal">
+          <div id="modal" class="modal-content"> 
+            <div id="background" class="background">
+              <div class="leaf leaf1"></div>
+              <div class="leaf leaf2"></div>
+              <div class="leaf leaf3"></div>
+              <div class="leaf leaf4"></div>
+              <div class="leaf leaf5"></div>
+              <div class="leaf leaf6"></div>
+            </div>
+          <!-- Render SignIn.vue component here -->
+            <SignIn @close="closeModal" />
+            <img id="leafImage" src="" alt="">
+          </div>
         </div>
-      </div>
+    
+      </transition>
     </Teleport>
     
   </div>
@@ -73,6 +105,7 @@ import {ref} from 'vue';
 import SignIn from '../components/SignIn.vue';
 
 const showModal = ref(false); // This variable controls the modal visibility
+
 
 const showSignInModal = () => {
   // Set a reactive variable to indicate that the modal should be shown
@@ -88,6 +121,8 @@ const goToYoutube = () => {
   // Redirect the user to the YouTube link.
   window.open('https://youtu.be/6HNoPB_cTwE?si=-eHfsw-ALItePszu', '_blank');
 };
+
+
 </script>
 
 <style lang="scss">
@@ -101,66 +136,68 @@ const goToYoutube = () => {
     clip-rule: evenodd;
 } 
 .home-wrapper {
-  background-image: url('../assets/img/headingbg.png');
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-size: 1100px 650px;
+
   background-position: center;
   align-items: center;
   justify-content: center;
-  margin-top: 0%;
-  height: 680px;
+  width: clamp(100px, calc(100vw - 0px), calc(100vw - 0px));
+  height: 50em;
   .heading-container {
+    background: 
+    radial-gradient(circle at bottom, $beige, transparent 80%),    
+    linear-gradient(to top, $lightgray 0%, transparent 70%),    
+    linear-gradient(to bottom, transparent, rgba($lightgray, 0.4) 70%),
+    $beige;  
+    opacity: 0.7;
+    animation: bg 9s infinite;  
+    background-size: cover;
     font-family: $heading-font;
-    color: $heading-color;
+    color: $black;
     font-size: $heading-size;
-    margin-top: 1%;
-    width: 1280px;
-    &::before{
-      content: '';
-      position: absolute; 
-      top: 0px; 
-      right: 0px; 
-      bottom: 0px; 
-      left: 0px; 
-      background-image: url('../assets/img/plantlogo.svg');
-      background-repeat: no-repeat;
-      background-size: 200px 390px;
-      background-position: center;
-      background-position-y: 55% ;
-      mix-blend-mode: multiply;
-      opacity: 0.5;
-      z-index: 0;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    svg {
+      font-family: "Racing Sans One", sans-serif;
+      width: 100%;
+      height: 250px;
+      text {
+        animation: stroke 9s infinite alternate-reverse ;
+        stroke-width: 3;
+        stroke: $darkbeige;
+        font-size: 115px;
+      }
     }
+
+
+
+    // &::before{
+    //   content: '';
+    //   position: absolute; 
+    //   top: 0px; 
+    //   right: 0px; 
+    //   bottom: 0px; 
+    //   left: 0px; 
+    //   background-image: url('../assets/img/plantlogo.svg');
+    //   background-repeat: no-repeat;
+    //   background-size: 200px 390px;
+    //   background-position: center;
+    //   background-position-y: 45% ;
+    //   filter: drop-shadow(2px -2px 2px rgba(0, 0, 0, 0.5));
+    //   mix-blend-mode: screen;
+    //   opacity: 0.5;
+    //   z-index: 0;
+    // }
     h1 {
       position: absolute;
-      top: 40%;
-      right: 40%;
+      top: 50%;
+      right: 50%;
+      transform: translate(50%, -50%);
       z-index: 1;
+      text-shadow: 3px 3px 0  
+      $darkpink, 3px 3px 0 $lightpink;
+      font-size: 2em;
     }
-    h2, h3 {
-      font-family: $sub-heading-font;
-      text-shadow: 3px 3px 0  #000, 3px 3px 0 #000,
-      3px 3px 0  #000, 3px 3px 0 #000;
-      font-size: 4.5rem;
-      font-weight: 700;
-      font-style: normal;
-      color: #ffffff1e;
-    }
-    h2 { 
-      position: absolute;
-      top: 30%;
-      left: 27%;
-      text-shadow: 3px 3px 1px  #000, 3px 3px 1px #000,
-      3px 3px 1px  #000, 3px 3px 1px #000;
-    }
-    h3 { 
-      position: absolute;
-     bottom: 35%;
-     right: 27%;
-     text-shadow: 3px 3px 1px  #000, 3px 3px 1px #000,
-      3px 3px 1px  #000, 3px 3px 1px #000;
-    }
+    
   }
  
 }
@@ -172,17 +209,18 @@ const goToYoutube = () => {
   
   button {
   position: relative;
-  padding: 10px 50px;
-  font-size: 20px;
+  height: 60px;
+  width: 150px;
+  font-size: 2em;
   font-weight: bold;
-  color: #30382d;
+  color: $darkbeige;
   background-color: transparent;
-  border: 3px solid #7bdad7;
+  border: 3px solid $darkbeige;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.5s;
   z-index: 4;
-  font-family: 'barber-complete', sans-serif;
+  font-family: $sub-heading-font;
   
   
 
@@ -193,7 +231,7 @@ const goToYoutube = () => {
     height: 100%;
     top: 5px;
     left: 5px;
-    background-color: #f3e9a3;
+    background-color: $lightgray;
     border-radius: 8px;
     z-index: -1;
     transition: all 0.5s;
@@ -202,6 +240,8 @@ const goToYoutube = () => {
   &:hover::after {
     top: 0;
     left: 0;
+    background-color: $beige;
+    transform: background-color 1.5s ease-in-out;
   }
 
   .icon-1 {
@@ -241,36 +281,78 @@ const goToYoutube = () => {
   }
 }
 
-
- 
-
-
-
-
-
   
 }
 
 
-.modal {
-  display: flex;
-  justify-content: center; /* Horizontal centering */
-  align-items: center; /* Vertical centering */
+.background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
-  z-index: 9999; /* Ensure the modal is above other content */
-  .modal-content {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    max-width: 80%; /* Set a maximum width for the modal */
+  z-index: 0;
+
+  .leaf {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    overflow:hidden;
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: fadeIn 1.5s forwards;
+    opacity: 0;
+    background-color: transparent;
+    
+
+    &.leaf1 { top: -30%; left: 35%; transform: rotate(5deg) scaley(-1) ;animation-delay: 0s; background-image: url(../assets/img/leaf4.png); background-size: contain; }
+    &.leaf2 { top: 30%; left: 5%; transform: rotate(350deg); animation-delay: 0.4s; background-image: url(../assets/img/leaf2.png);  }
+    &.leaf3 { top: -290px; left: -120px; transform: rotate(-50deg) scaley(-1)  ;animation-delay: 0.3s; background-image: url(../assets/img/leaf2.png); }
+    &.leaf4 { top: 5%; left: -65%; transform: rotate(15deg) scalex(-1) scale(1.1);  animation-delay: 0.5s; background-image: url(../assets/img/leaf4.png); }
+    &.leaf5 { top: 10px; right: -50% ; transform: rotate(-18deg) scale(1.5) ;
+      translate: 500px 1px;
+      animation-delay: 0.6s; background-image: url(../assets/img/leaf4.png); }
+   
   }
 }
 
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes stroke {
+  0% {
+    fill: rgba(89, 89, 88, 0);
+    stroke: rgba(64, 64, 63, 1);
+    stroke-dashoffset: 25%;
+    stroke-dasharray: 0 50%;
+    stroke-width: 2;
+  }
+  70% {
+    fill: rgba(89, 89, 88, 0);
+    stroke: rgba(64, 64, 63, 1);
+  }
+  80% {
+    fill: rgba(89, 89, 88, 0);
+    stroke: rgba(64, 64, 63, 1);
+    stroke-width: 3;
+  }
+  100% {
+    fill: rgba(89, 89, 88, 1);
+    stroke: rgba(64, 64, 63, 0.128);
+    stroke-dashoffset: -25%;
+    stroke-dasharray: 50% 0;
+    stroke-width: 0;
+  }
+}
+
+@keyframes bg {
+  0%, 100% { background-color: $lightgray; }
+  25% { background-color: $lightgray; }
+  50% { background-color: $beige; }
+  75% { background-color: $lightpink; }
+}
 
 </style>

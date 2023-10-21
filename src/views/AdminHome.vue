@@ -1,5 +1,5 @@
 <template>
-  <div class="main bg-slate-100 w-full h-screen" v-if="isLoggedIn">
+  <div class="main bg-slate-100 dark:bg-slate-500 w-full h-screen" v-if="isLoggedIn">
     <h1>Admin Home</h1>
    
     <button id="btn-out" @click="handleSignOut">

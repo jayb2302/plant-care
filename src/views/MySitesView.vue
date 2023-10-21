@@ -10,7 +10,7 @@
             <template v-if="plant.siteId === site.id">
             <div class="plant-details absolute  ">
                 <p>{{ plant.name }}</p>
-                <img class="img" :src="plant.imgUrl" alt="">
+                <img class="img" :src="plant.image_url" alt="">
             </div>
               
               <!-- Display other plant data... -->

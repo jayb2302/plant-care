@@ -1,59 +1,78 @@
 <template>
-  <div class="modal flex flex-col gap-3">
-    <div class="modal-content">
-      <h2 class="h2 text-center">Add a new plant</h2>
-      <button class="button" @click="$emit('close')">Close</button>
-    <!-- Modal content for adding a new plant -->
-      <div class="plant-selection ">
-        <input
-          type="text"
-          class="search__input"
-          v-model="searchQuery"
-          @input="handleInput"
-          placeholder="Search for a plant..."
-        />
-
-
+  <div class="modal  ">
     
-        <ul v-if="!selectedPlant" class="suggestions">
-          <li v-if="!plantResults.length">
-            No results, please type in the input
-          </li>
-          <template v-else>
-            <li v-for="plant in plantResults" :key="plant.id" @click="selectPlant(plant)">
-              {{ plant.common_name }}
+    <div class="modal-content rb flex flex-col justify-evenly ">
+      <h1 class="heading text-4xl font-semibold absolute  text-center  mb-5">Add your plant</h1>
+      <div class="plant-card flex flex-row rb gap-5 relative">
+
+        <button class="pt-4 pr-4" @click="$emit('close')">
+              <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
+                  <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
+              </svg>
+          </button>
+        
+        
+      <!-- Modal content for adding a new plant -->
+        <div class="plant-selection w-5/12  flex flex-col gap-5    ">
+          <input
+            type="text"
+            class="search__input"
+            v-model="searchQuery"
+            @input="handleInput"
+            placeholder="Search for a plant..."
+          />
+          <ul v-if="searchQuery" class="suggestions overflow-auto h-40 m-5 w-full bg-sky-300">
+            <li v-if="isLoading">
+              Loading...
             </li>
-          </template>
-        </ul>
+            <li v-else-if="!plantResults.length && !isLoading">
+              No results, please type in the input
+            </li>
+            <template v-else>
+              <li class="overflow-hidden" v-for="plant in plantResults" :key="plant.id" @click="selectPlant(plant)">
+                {{ plant.common_name }}
+              </li>
+            </template>
+          </ul>
+          <div class="relative rb  ">
+            <label for="siteSelection">Select a Site:</label>
+            <select id="siteSelection" v-model="selectedSite">
+              <option value="">...</option>
+              <option v-for="site in sites" :key="site.id" :value="site.id">{{ site.name }}</option>
+            
+            </select>
+            <button @click="openAddSiteModal"> createNewSite</button>
+            <teleport to="body">
+              <AddSiteModal
+                v-if="isAddSiteModalOpen"
+                @close="closeAddSiteModal"
+                @confirm="onConfirm"
+              />
+            </teleport>
+           
+          </div>
+        </div>
+          
+        
 
+        <div class="flex flex-col w-5/12" v-if="selectedPlant">
+          <h3>{{ selectedPlant.common_name }}</h3>
+          <p>{{ selectedPlant.scientific_name.join(', ') }}</p>
+          <img :src="selectedPlant.default_image.medium_url" alt="Plant Image" />
+          <p>Water Frequency: {{ selectedPlant.watering_general_benchmark.value }} {{ selectedPlant.watering_general_benchmark.unit }}</p>
+          <p>Light Conditions: {{ selectedPlant.sunlight.join(', ') }}</p>
+          <p>Care Level: {{ selectedPlant.care_level }}</p>
+          <button @click="confirmPlantSelection">Add Plant</button>
+          
+          <div class="error-message" v-if="!selectedSite">Please select a site before adding the plant.</div>
+        </div>
+        
+      <!-- You can add your form elements and UI here -->
+       
 
-      <div v-if="selectedPlant">
-        <h3>{{ selectedPlant.common_name }}</h3>
-        <p>{{ selectedPlant.scientific_name.join(', ') }}</p>
-        <img :src="selectedPlant.default_image.medium_url" alt="Plant Image" />
-        <p>Water Frequency: {{ selectedPlant.watering_general_benchmark.value }} {{ selectedPlant.watering_general_benchmark.unit }}</p>
-        <p>Light Conditions: {{ selectedPlant.sunlight.join(', ') }}</p>
-        <p>Care Level: {{ selectedPlant.care_level }}</p>
-        <button @click="confirmPlantSelection">Confirm</button>
-        <button @click="unselectPlant">Unselect plant</button>
+        
       </div>
     </div>
-    <!-- You can add your form elements and UI here -->
-    <div>
-      <label for="siteSelection">Select a Site:</label>
-      <select id="siteSelection" v-model="selectedSite">
-        <option value="">Select a site</option>
-        <option v-for="site in sites" :key="site.id" :value="site.id">{{ site.name }}</option>
-      </select>
-      
-      
-    </div>
-    <div class="flex flex-col">
-      <button class="button" @click="onConfirm">Confirm</button>
-     
-    </div>
-    </div>
-
    
   </div>
 </template>
@@ -65,6 +84,7 @@ import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import { getPlantList, getPlantById } from '../modules/plantapi';
 import { debounce } from 'lodash';
+import AddSiteModal from './AddSiteModal.vue'; 
 
 
 const searchQuery = ref('');
@@ -72,13 +92,15 @@ const selectedPlant = ref(null);
 const selectedSite = ref('');
 const sites = ref([]);
 const plantResults = ref([])
+const isLoading = ref(false);
 
 const performSearchRequest = async () => {
+  isLoading.value = true; // Show loading indicator
   const data = await getPlantList({
     q: searchQuery.value
-  })
-
-  plantResults.value = data
+  });
+  isLoading.value = false; // Hide loading indicator
+  plantResults.value = data;
 }
 
 const handleInput = debounce(() => {
@@ -90,34 +112,11 @@ const selectPlant = async (plant) => {
   selectedPlant.value = data;
 };
 
-const unselectPlant = () => {
-  selectPlant.value = null
-}
 
 
 
-const confirmPlantSelection = async () => {
-  if (selectedPlant.value && selectedSite.value) {
-    try {
-      const plantCollection = collection(db, 'plants');
-      const newPlantDoc = await addDoc(plantCollection, {
-        common_name: selectedPlant.value.common_name,
-        scientific_name: selectedPlant.value.scientific_name, // Corrected reference
-        image_url: selectedPlant.value.default_image.medium_url,
-        water_frequency: selectedPlant.value.watering_general_benchmark, // Corrected reference
-        light_conditions: selectedPlant.value.sunlight, // Corrected reference
-        care_level: selectedPlant.value.details.care_level, // Corrected reference
-        // Reference fyrir hvaða herbergi
-        siteId: selectedSite.value.id
-      });
 
-      console.log('Plant added with ID: ', newPlantDoc.id);
-      selectedPlant.value = null;
-    } catch (error) {
-      console.error('Error adding plant: ', error);
-    }
-  }
-};
+
 
 const fetchSites = async () => {
   try {
@@ -133,10 +132,47 @@ const fetchSites = async () => {
   }
 };
 
+const isAddSiteModalOpen = ref(false);
 
-const onConfirm = () => {
-  // Handle the confirm logic here
-  console.log('Confirm button clicked');
+
+
+const confirmPlantSelection = async () => {
+  if (selectedPlant.value && selectedSite.value) {
+    const newPlantDoc = await addPlantToFirestore(selectedPlant.value, selectedSite.value);
+    console.log('Plant added with ID: ', newPlantDoc.id);
+    selectedPlant.value = null; // Clear the selected plant.
+    searchQuery.value = ''; // Reset the search query
+  }
+};
+
+
+
+
+const addPlantToFirestore = async (plantData, siteId) => {
+  const plantCollection = collection(db, 'plants');
+
+  // Create a new document in the 'plants' collection with the selected plant's details
+  const newPlantDoc = await addDoc(plantCollection, {
+    common_name: plantData.common_name,
+    scientific_name: plantData.scientific_name.join(', '),
+    image_url: plantData.default_image.medium_url,
+    water_frequency: `${plantData.watering_general_benchmark.value} ${plantData.watering_general_benchmark.unit}`,
+    light_conditions: plantData.sunlight.join(', '),
+    care_level: plantData.care_level,
+    siteId: siteId
+  });
+
+  return newPlantDoc; // Return the newly added document
+};
+
+const openAddSiteModal = () => {
+  // Set isAddSiteModalOpen to true to open the modal
+  isAddSiteModalOpen.value = true;
+};
+
+const closeAddSiteModal = () => {
+  // Set isAddSiteModalOpen to false to close the modal
+  isAddSiteModalOpen.value = false;
 };
 
 onMounted(fetchSites);
@@ -144,21 +180,23 @@ onMounted(fetchSites);
 </script>
 
 <style lang="scss">
+
 .modal-content {
-        background-color: $darkPink;
-        background-image: url('../assets/img/plantcarebg.png');
-        background-size: contain;
-        background-position-y: 50%;
-        width: 100%;
-        .h2{
-            color: $white;
-            font-family: $heading-font;
-            font-weight: 400;
-            font-size: 5rem;
-            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5), 0 0 1em rgba(0, 0, 0, 0.5);
-        }
-        
-    }
+  height: 80vh;
+  color: $black;
+  .heading {
+    top: 1%;
+    right: 50%;
+    transform: translate(50%, 1%);
+    font-family: $title-font;
+  }
+  .plant-card{
+    background-color: $lightgray;
+    padding: 3em 4em;
+    font-family: $title-font;
+  }
+}
+
 .button {
   position: relative;
   cursor: pointer;

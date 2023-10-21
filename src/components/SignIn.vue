@@ -1,8 +1,13 @@
 <template>
     <div class="logIn-wrapper">
-        <h1 class="text-2xl font-semibold mb-5">Log in</h1>
+        <button @click="$emit('close')"> 
+            <svg class="back-btn" xmlns="http://www.w3.org/2000/svg" width="24.703" height="24.928">
+                <path d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z"/>
+            </svg> 
+        </button>
+        <h1 class="text-4xl font-semibold mt-4 text-center  mb-5">Log in</h1>
         <div class="logIn-container">
-            <button @click="$emit('close')">Close</button>
+            
             <div class="emailInput">
             <label for="email" class="block text-gray-600">Email</label>
             <input
@@ -10,7 +15,7 @@
                 type="text"
                 v-model="email"
                 required
-                class=""
+                class="w-full h-10"
             />
             </div>
             <div class="passwordInput">
@@ -20,7 +25,7 @@
                 type="password"
                 v-model="password"
                 required
-                class=""
+                class="w-full h-10"
             />
             </div>
             <div class="mb-4 text-red-600">{{ errMsg }}</div>
@@ -35,12 +40,29 @@
         </button>
 
         <Teleport to="main">
-            <div class="register modal" v-if="showModal">
-                <div class="modal-content"> 
-                <!-- Render SignIn.vue component here -->
-                <RegisterNew @close="closeModal" />
+            <transition 
+                v-motion
+                :initial="{
+                opacity: 0,
+                y: 0,
+                }"
+                :variants="{ custom: { scale: 2 } }"
+                :enter="{
+                opacity: 1,
+                y: 0,
+                }"
+                :leave="{
+                opacity: 0,
+                y: 0,
+                }" 
+            >
+            <div class="modal" v-if="showModal">
+                <div class=""> 
+                
+                    <RegisterNew @close="closeModal" />
                 </div>
             </div>
+        </transition>
         </Teleport>
     </div>
 </template>
@@ -48,7 +70,7 @@
     import { ref as refVue } from "vue"
     import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
     import { useRouter } from 'vue-router'
-    import RegisterNew from "../views/RegisterNew.vue"
+    import RegisterNew from "../components/RegisterNew.vue"
 
     const email = refVue("")
     const password = refVue("")
@@ -101,23 +123,33 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        background-color: rgba(180, 180, 180, .2);
-    backdrop-filter: blur(10px);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-evenly;
-    gap: 20px;
-    height: 260px;
-    width: 260px;
-    border: 1px solid rgba(150, 150, 150, .3);
-    border-radius: 10px;
-    box-shadow: 0px 0px 25px ;
-    overflow: hidden;
-    padding: 40px;
+        font-family: $title-font;
+        color: $black;
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        border: 1px solid rgba(150, 150, 150, 0.284);
+        border-radius: 10px;
+        box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;        overflow: hidden;
+        padding: 2rem 3rem;
+        background-color: $signinbg;
+
+        .back-btn{
+            transform: scalex(-1) scale(1.3);
+            position: absolute;
+            left: 5%;
+            top: 5%;
+            fill: $darkbeige;
+            &:hover{
+                transform: scaleX(-1) scale(1.9);
+                transition: all 0.5s ease-in-out;
+                fill: $backhover;
+            }
+        }
 }
         .logIn-container {
-            background-color: aqua;
+            background-color: none;
         }
     
 </style>

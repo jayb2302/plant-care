@@ -6,7 +6,7 @@
     <header>
       <div class="wrapper">
         
-        <nav class="relative">
+        <nav class="relative ">
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/signin">SignIn</RouterLink>
           <RouterLink to="/about">About</RouterLink>
