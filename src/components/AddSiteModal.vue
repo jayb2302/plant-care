@@ -3,6 +3,11 @@
       <!-- Modal content -->
       <div class="modal-content flex flex-col  " @click.stop>
         <h2 class="h2 text-3xl text-center">Select a Site</h2>
+            <button class=" w-40" @click="$emit('close')">
+                <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
+                    <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
+                </svg>
+            </button>
         <div class="site-list flex wrap gap-5 pt-3 pb-3">
           <!-- Render the list of sites with thumbnails and headings -->
             <div
@@ -18,48 +23,60 @@
                 </div>
             </div>
         </div>
+
         <div class="flex flex-col justify-center items-center gap-1 ">
-            <button class="button w-40" @click="confirmSelection">Confirm</button>
-            <button class="button w-40" @click="$emit('close')">Close</button>
+            <button class="buttonadmin w-40" @click="confirmSelection">
+                Confirm
+                <div class="buttonadmin__horizontal"></div>
+                <div class="buttonadmin__vertical"></div>
+            </button>
         </div>
+
         <div v-if="showLightConditionModal" class="modal">
             <div class="modal-content flex flex-col ">
-                
-                <button class="button w-40" @click="$emit('close')">Go Back</button>
+               
+               
                 <div class="div flex justify-center ">
+                
                     <h2 class="h2">Select Light Condition</h2>
                 </div>
+                    
                 <div class="light-content flex justify-evenly">
-                
-                    <button class="light-btn" @click="setLightCondition('Full-shade')" :class="{ selected: selectedButton === 'Full-shade' }">
-                        <img src="../components/icons/fullshade.svg" style="width: 60px; height: 60px;" alt="">
+                 <button class="" @click="$emit('close')">
+                        <svg class="back-btn" xmlns="http://www.w3.org/2000/svg" width="24.703" height="24.928">
+                            <path d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z"/>
+                        </svg> 
+                    </button>
+                    <button class="light-btn flex flex-col items-center" @click="setLightCondition('Full-shade')" :class="{ selected: selectedButton === 'Full-shade' }">
+                        <img src="../components/icons/fullShade.svg" style="width: 60px; height: 60px;" alt="Full shade icons">
                         Full-shade
                     </button>
-                    <button class="light-btn" @click="setLightCondition('Part-shade')" :class="{ selected: selectedButton === 'Part-shade' }">
-                        <img src="../components/icons/partshade.svg" style="width: 60px; height: 60px;" alt="">
+                    <button class="light-btn flex flex-col items-center" @click="setLightCondition('Part-shade')" :class="{ selected: selectedButton === 'Part-shade' }">
+                        <img src="../components/icons/partShade.svg" style="width: 60px; height: 60px;" alt="Part shade icon">
                         Part-shade
                     </button>
-                    <button class="light-btn" @click="setLightCondition('Part-sun')" :class="{ selected: selectedButton === 'Part-sun' }">
-                        <img src="../components/icons/partsun.svg" style="width: 60px; height: 60px;" alt="">
+                    <button class="light-btn flex flex-col items-center" @click="setLightCondition('Part-sun')" :class="{ selected: selectedButton === 'Part-sun' }">
+                        <img src="../components/icons/partSun.svg" style="width: 60px; height: 60px;" alt="Part sun icon">
                         Part-sun
                     </button>
-                    <button class="light-btn" @click="setLightCondition('Full-sun')" :class="{ selected: selectedButton === 'Full-sun' }">
-                        <img src="../components/icons/fullsun.svg" style="width: 60px; height: 60px;" alt="">
+                    <button class="light-btn flex flex-col items-center" @click="setLightCondition('Full-sun')" :class="{ selected: selectedButton === 'Full-sun' }">
+                        <img src="../components/icons/fullSun.svg" style="width: 60px; height: 60px;" alt="Full sun icon">
                         Full-sun
                     </button>
                 </div> 
                
-              <div class="flex justify-center items-center mt-5">
-               
-               <button class="button w-40"  @click="confirmLightCondition">
-               Confirm</button>
-               
-              </div>
+                <div class="flex justify-center items-center mt-5">
+                
+                    <button class="buttonadmin w-40"  @click="confirmLightCondition">
+                        Confirm
+                        <div class="buttonadmin__horizontal"></div>
+                        <div class="buttonadmin__vertical"></div>
+                    </button>
+                
+                </div>
                
             </div>
         </div>
-
-        
       </div>
     </div>
 </template>
@@ -160,7 +177,8 @@ const confirmLightCondition = () => {
 <style scoped lang="scss">
   /* Add styling for the modal and its content */
 .modal {
-    width: 100%;    
+    width: 100%;  
+      
     .light-content {
         background-color: rgba(255, 255, 255, 0.748);
         padding: 5% 0;
@@ -175,12 +193,9 @@ const confirmLightCondition = () => {
             }
         }
     }
-    .modal-content {
-        background-color: $darkPink;
-        background-image: url('../assets/img/plantcarebg.png');
-        background-size: contain;
+    .modal-content {   
         background-position-y: 50%;
-        width: 100%;
+        width: clamp(300px, 50%, 800px);
         .h2{
             color: $white;
             font-family: $heading-font;
@@ -234,7 +249,20 @@ const confirmLightCondition = () => {
 
         }
     }
+    .back-btn{
+    transform: scalex(-1) scale(1.3);
+    position: absolute;
+    left: 5%;
+    top: 25%;
+    fill: $darkbeige;
+    &:hover{
+        transform: scaleX(-1) scale(1.9);
+        transition: all 0.5s ease-in-out;
+        fill: $backhover;
+    }
 }
+}
+
   .selected {
     border: 2px solid $darkPink;
     background-color: $mutedPink;

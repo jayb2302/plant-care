@@ -1,30 +1,4 @@
 
-<script setup>
-
-import { ref as refVue } from "vue"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { useRouter } from 'vue-router'
-
-const email = refVue("")
-const password = refVue("")
-const router = useRouter()
-
-const register = () => {
-    createUserWithEmailAndPassword(getAuth(), email.value, password.value)
-        .then(() => {
-            console.log("Successfully registered!")
-            router.push('/signin')
-        })
-        .catch((error) => {
-            console.log(error.code)
-            alert(error.message);
-        })
-}
-
-
-
-
-</script>
 
 <template>
     <div id="app" class="logIn-wrapper  
@@ -40,6 +14,15 @@ const register = () => {
                  ">
                
                  <h1 class="text-2xl font-semibold mb-5">Create New Account</h1>
+                <div class="userName">
+                    <label for="userName" class="block text-gray-600">Username</label>
+                    <input
+                        type="text"
+                        placeholder=""
+                        required
+                        v-model="username"
+                        class="w-full h-10">                
+                    </div>
                 <div class="emailInput">
                     <label for="email" class="block text-gray-600">Email</label>
                     <input
@@ -61,7 +44,7 @@ const register = () => {
                     />
                 </div>
                 <button 
-                    @click="register" 
+                    @click="signUp" 
                     class="enter">
                     Submit
                 </button>
@@ -74,6 +57,42 @@ const register = () => {
     </div>
 </template>
 
+<script setup>
+
+import { ref as refVue } from "vue"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { useRouter } from 'vue-router'
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+
+const username = refVue("")
+const email = refVue("")
+const password = refVue("")
+const router = useRouter()
+
+const signUp = () => {
+  createUserWithEmailAndPassword(getAuth(), email.value, password.value)
+    .then(() => {
+      console.log("Successfully registered!");
+      //Store the username in Firestore
+      addDoc(collection(getFirestore(), "users"), {
+        username: username.value,
+        email: email.value,
+      })
+        .then(() => {
+          console.log("Username and email saved in Firestore");
+          router.push('/signin');
+        })
+        .catch((error) => {
+          console.error("Error saving username and email in Firestore:", error);
+        });
+    })
+    .catch((error) => {
+      console.log(error.code);
+      alert(error.message);
+    });
+};
+
+</script>
 
 
 

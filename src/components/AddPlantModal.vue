@@ -1,75 +1,77 @@
 <template>
-  <div class="modal  ">
+  <div class="modal">
     
-    <div class="modal-content rb flex flex-col justify-evenly ">
-      <h1 class="heading text-4xl font-semibold absolute  text-center  mb-5">Add your plant</h1>
-      <div class="plant-card flex flex-row rb gap-5 relative">
-
-        <button class="pt-4 pr-4" @click="$emit('close')">
-              <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
-                  <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
-              </svg>
-          </button>
+    <div class="modal-content relative flex  flex-col ">
+      <h1 class="heading text-4xl font-semibold mb-5  text-center ">Add your plant</h1>
+      <button class="absolute inset-5" @click="$emit('close')">
+          <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
+              <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
+          </svg>
+      </button>
+      <div class="plant-card flex flex-row w-full gap-5 relative">
         
-        
-      <!-- Modal content for adding a new plant -->
-        <div class="plant-selection w-5/12  flex flex-col gap-5    ">
+        <!-- Modal content for adding a new plant -->
+        <div class="plant-selection relative w-1/2  flex flex-col gap-5    ">
           <input
             type="text"
-            class="search__input"
+            class="search__input p-4 "
             v-model="searchQuery"
             @input="handleInput"
             placeholder="Search for a plant..."
           />
-          <ul v-if="searchQuery" class="suggestions overflow-auto h-40 m-5 w-full bg-sky-300">
-            <li v-if="isLoading">
-              Loading...
+          <ul v-if="searchQuery" class="suggestions overflow-auto w-full">
+            <li class="p-2" v-if="isLoading">
+              <h2 class="pl-2 p-2"> Loading ...</h2> 
             </li>
-            <li v-else-if="!plantResults.length && !isLoading">
-              No results, please type in the input
+            <li class="p-2" v-else-if="!plantResults.length && !isLoading">
+              <h2 class="pl-3 pb-2" >No results, please type in the input</h2>
             </li>
             <template v-else>
-              <li class="overflow-hidden" v-for="plant in plantResults" :key="plant.id" @click="selectPlant(plant)">
-                {{ plant.common_name }}
+              <li class="overflow-hidden flex flex-col pl-2 p-2" v-for="plant in plantResults" :key="plant.id" @click="selectPlant(plant)">
+                <h2 class=" pb-2 ">{{ plant.common_name }} </h2>
               </li>
             </template>
           </ul>
-          <div class="relative rb  ">
+          <div class=" flex flex-col ">
             <label for="siteSelection">Select a Site:</label>
-            <select id="siteSelection" v-model="selectedSite">
+            <select class="select" id="siteSelection" v-model="selectedSite">
               <option value="">...</option>
               <option v-for="site in sites" :key="site.id" :value="site.id">{{ site.name }}</option>
-            
             </select>
-            <button @click="openAddSiteModal"> createNewSite</button>
-            <teleport to="body">
-              <AddSiteModal
-                v-if="isAddSiteModalOpen"
-                @close="closeAddSiteModal"
-                @confirm="onConfirm"
-              />
-            </teleport>
+           
            
           </div>
+          <button class="button" @click="openAddSiteModal"> Create New Site</button>
+          <div class="flex flex-col">
+            <label for="lastWateredDate">Last Watered:</label>
+            <input type="date" id="lastWateredDate" v-model="lastWateredDate" />
+          </div>
+            
         </div>
-          
+        <teleport to="body">
+          <AddSiteModal
+            v-if="isAddSiteModalOpen"
+            @close="closeAddSiteModal"
+            @confirm="onConfirm"
+          />
+        </teleport>
         
+        <div class="plantSuggestion-container flex flex-col   items-center w-1/2">
+          <div class="plantSuggestion-content" v-if="selectedPlant">
+            <h2 class="text-xl">{{ selectedPlant.common_name }}</h2>
+            <p class="pl-3 pb-3">{{ selectedPlant.scientific_name.join(', ') }}</p>
+            <img :src="selectedPlant.default_image.small_url" alt="Plant Image" />
+            <p>Water Frequency: {{ selectedPlant.watering_general_benchmark.value }} {{ selectedPlant.watering_general_benchmark.unit }}</p>
+            <p>Light Conditions: {{ selectedPlant.sunlight.join(', ') }}</p>
+            <p>Care Level: {{ selectedPlant.care_level }}</p>
 
-        <div class="flex flex-col w-5/12" v-if="selectedPlant">
-          <h3>{{ selectedPlant.common_name }}</h3>
-          <p>{{ selectedPlant.scientific_name.join(', ') }}</p>
-          <img :src="selectedPlant.default_image.medium_url" alt="Plant Image" />
-          <p>Water Frequency: {{ selectedPlant.watering_general_benchmark.value }} {{ selectedPlant.watering_general_benchmark.unit }}</p>
-          <p>Light Conditions: {{ selectedPlant.sunlight.join(', ') }}</p>
-          <p>Care Level: {{ selectedPlant.care_level }}</p>
-          <button @click="confirmPlantSelection">Add Plant</button>
-          
-          <div class="error-message" v-if="!selectedSite">Please select a site before adding the plant.</div>
+            <div class="error-message" v-if="!selectedSite">Please select a site before adding the plant.</div>
+            <button class="button w-full mt-2" @click="confirmPlantSelection">Add Plant</button>
+            
+          </div>
         </div>
-        
-      <!-- You can add your form elements and UI here -->
-       
-
+     
+ 
         
       </div>
     </div>
@@ -93,6 +95,7 @@ const selectedSite = ref('');
 const sites = ref([]);
 const plantResults = ref([])
 const isLoading = ref(false);
+const lastWateredDate = ref('');
 
 const performSearchRequest = async () => {
   isLoading.value = true; // Show loading indicator
@@ -159,6 +162,7 @@ const addPlantToFirestore = async (plantData, siteId) => {
     water_frequency: `${plantData.watering_general_benchmark.value} ${plantData.watering_general_benchmark.unit}`,
     light_conditions: plantData.sunlight.join(', '),
     care_level: plantData.care_level,
+    last_watered: lastWateredDate.value,
     siteId: siteId
   });
 
@@ -180,21 +184,39 @@ onMounted(fetchSites);
 </script>
 
 <style lang="scss">
+.modal {
+  .modal-content {
+    font-family: $title-font;
+    color: $black;
+ 
+    .plant-card{
+        font-family: $title-font;
+        color: $black;
+        backdrop-filter: blur(10px);
+        gap: 20px;
+        border: 1px solid rgba(69, 63, 63, 0.284);
+        border-radius: 10px;
+        box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;        overflow: hidden;
+        padding: 2rem 3rem;
+        background-color: $signinbg;
+        height: 80vh;
+    .suggestions {
+      box-shadow: rgb(147, 149, 150) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+      height: 40vh;
+      h2 {
+        border-bottom: 2px dashed $lightgray;
+        font-size: 1.3em;
+      }
+    }
+  
+  }
+ 
+}
 
-.modal-content {
-  height: 80vh;
-  color: $black;
-  .heading {
-    top: 1%;
-    right: 50%;
-    transform: translate(50%, 1%);
-    font-family: $title-font;
-  }
-  .plant-card{
-    background-color: $lightgray;
-    padding: 3em 4em;
-    font-family: $title-font;
-  }
+}
+
+.select {
+  background-color: $input;
 }
 
 .button {

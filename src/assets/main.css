@@ -1,7 +1,6 @@
 @import './base.css';
-@import url("https://use.typekit.net/nmx5hvs.css");
-@import url('https://cdn.lordicon.com/lordicon-1.1.0.j');
 @import url("https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap");
+@import url('https://use.typekit.net/nmx5hvs.css');
 
 #app {
   max-width: 100vw;

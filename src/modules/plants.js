@@ -1,20 +1,14 @@
 // modules/myplant.js
 import { ref } from 'vue';
-import {
-  collection,
-  onSnapshot,
-  addDoc,
-  deleteDoc,
-  doc
-} from "firebase/firestore";
+import { collection, onSnapshot, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from '../firebase.js';
 
-const myplants = ref([]);
-const plantDataRef = collection(db, 'myplants');
+const plants = ref([]);
+const plantDataRef = collection(db, 'plants');
 
 const getPlantsData = () => {
   onSnapshot(plantDataRef, (snapshot) => {
-    myplants.value = snapshot.docs.map(doc => ({
+    plants.value = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }))
@@ -23,7 +17,7 @@ const getPlantsData = () => {
 
 const addPlant = async (newPlantData) => {
   try {
-    await addDoc(collection(db, 'myplants'), newPlantData);
+    await addDoc(collection(db, 'plants'), newPlantData);
   } catch (error) {
     console.error('Error adding plant:', error);
     throw error;
@@ -32,11 +26,11 @@ const addPlant = async (newPlantData) => {
 
 const deletePlant = async (id) => {
   try {
-    await deleteDoc(doc(db, 'myplants', id));
+    await deleteDoc(doc(db, 'plants', id));
   } catch (error) {
     console.error('Error deleting plant:', error);
     throw error;
   }
 };
 
-export { myplants, getPlantsData, addPlant, deletePlant };
+export { plants, getPlantsData, addPlant, deletePlant };

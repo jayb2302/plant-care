@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
+
+
  
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,25 +14,32 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      component: AboutView
+      component: () => import('../views/AboutView.vue')
     },
-   
+    
     {
-      path: '/register',
-      name: 'register',
+      path: '/signup',
+      name: 'SignUp',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../components/RegisterNew.vue')
+      component: () => import('../components/SignUp.vue')
     },
+
+    {
+      path: '/adminpanel',
+      name: 'AdminPanel',
+      component: () => import('../views/AdminPanel.vue')
+    },
+
     {
       path: '/mysitesview',
-      name: 'mysitesview',
+      name: 'MySitesView',
       component: () => import('../views/MySitesView.vue')
     },
     {
       path: '/signin',
-      name: 'signin',
+      name: 'SignIn',
       component: () => import('../components/SignIn.vue')
     },
     {
@@ -45,21 +53,19 @@ const router = createRouter({
     {
       path: '/createsite',
       name: 'createsite',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
+
       component: () => import('../components/CreateSite.vue')
     }
     ,
     {
       path: '/siteselection',
       name: 'siteSelection',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
+     
       component: () => import('../components/SiteSelectionModal.vue')
     }
   ]
 })
+
+
 
 export default router

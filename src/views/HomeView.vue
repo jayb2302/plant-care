@@ -64,7 +64,7 @@
         </div>
       </button>
     </div>
-    <Teleport to="main">
+    <Teleport to="body">
       <transition 
         v-motion
         :initial="{
@@ -127,6 +127,9 @@ const goToYoutube = () => {
 
 <style lang="scss">
 
+nav {
+  visibility: hidden;
+}
 
 .common-svg {
     shape-rendering: geometricPrecision;
@@ -152,8 +155,8 @@ const goToYoutube = () => {
     animation: bg 9s infinite;  
     background-size: cover;
     font-family: $heading-font;
-    color: $black;
-    font-size: $heading-size;
+    letter-spacing: .9em;
+    
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     svg {
@@ -193,9 +196,11 @@ const goToYoutube = () => {
       right: 50%;
       transform: translate(50%, -50%);
       z-index: 1;
-      text-shadow: 3px 3px 0  
-      $darkpink, 3px 3px 0 $lightpink;
-      font-size: 2em;
+      text-shadow: 2px 3px 3px rgba(0,0,0,0.3), 
+       0px -7px 10px rgba(255,255,255,0.3,), -4px 2px 3px rgba(255,255,255,0.3);
+      font-size: 9em;
+      color: $heading-text;
+      font-weight: 900;
     }
     
   }

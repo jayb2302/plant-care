@@ -6,9 +6,6 @@ $darkbeige: #40403F;
 $black: #20201f;
 $darkerbeige: #595958;
 $lightgrayblue: #D2D7D9;
-
-
-
 $lightgray: #D9D8D7;
 $darkergray: #A6A5A4;
 $darkgray:#595856;
@@ -18,6 +15,9 @@ $darkpink:#463531;
 $pink: #c5978b;
 $lightpink: #d7ada7;
 
+$heading-text:#13130c;
+$subheading-text:rgb(43, 43, 36) ; 
+
 $modalbg:  rgba(213, 209, 209, 0.809);
 $modalcontentbg:  #ad998677;
 $signinbg:  rgba(213, 209, 209, 0.473);
@@ -25,6 +25,14 @@ $input: #d0bcb79b ;
 $backhover: #342226;
 $focus: #8ba84d;
 
+$myBackground: hsla(30, 1%, 64%, 1) 
+              radial-gradient(at 86% 10%, hsla(28, 11%, 71%, 1) 0px, transparent 50%),
+              radial-gradient(at 92% 92%, hsla(60, 0%, 34%, 1) 0px, transparent 50%),
+              radial-gradient(at 59% 31%, hsla(0, 22%, 54%, 1) 0px, transparent 50%),
+              radial-gradient(at 3% 96%, hsla(197, 8%, 83%, 1) 0px, transparent 50%),
+              radial-gradient(at 60% 71%, hsla(7, 37%, 74%, 1) 0px, transparent 50%),
+              radial-gradient(at 27% 65%, hsla(60, 0%, 24%, 1) 0px, transparent 50%),
+              radial-gradient(at 4% 12%, hsla(28, 11%, 71%, 1) 0px, transparent 50%);
 
 
 
@@ -40,7 +48,7 @@ $heading-color: #30382d;
 
 
 /* Font Variables */
-$heading-font: 'timberline', sans-serif;
+$heading-font: 'utopia-std-display', serif;
 $sub-heading-font: 'Racing Sans One', sans-serif;
 $title-font: 'fp-head-pro', sans-serif;
 $heading-size: 5rem;

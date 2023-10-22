@@ -26,10 +26,11 @@
                 v-model="password"
                 required
                 class="w-full h-10"
+                @keydown.enter="checkEnterKey"
             />
             </div>
             <div class="mb-4 text-red-600">{{ errMsg }}</div>
-            <button @click="logIn" class="logIn-btn"> 
+            <button @click="SignIn"  class="logIn-btn"> 
                 Log in
             </button>
 
@@ -39,7 +40,7 @@
             Register
         </button>
 
-        <Teleport to="main">
+        <Teleport to="body">
             <transition 
                 v-motion
                 :initial="{
@@ -59,7 +60,7 @@
             <div class="modal" v-if="showModal">
                 <div class=""> 
                 
-                    <RegisterNew @close="closeModal" />
+                    <SignUp @close="closeModal" />
                 </div>
             </div>
         </transition>
@@ -70,7 +71,7 @@
     import { ref as refVue } from "vue"
     import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
     import { useRouter } from 'vue-router'
-    import RegisterNew from "../components/RegisterNew.vue"
+    import SignUp from "../components/SignUp.vue"
 
     const email = refVue("")
     const password = refVue("")
@@ -79,21 +80,34 @@
 
     const showModal = refVue(false); // This variable controls the modal visibility
 
+    const checkEnterKey = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent the default form submission behavior
+      SignIn();
+    }
+  };
     const showRegisterModal = () => {
     // Set a reactive variable to indicate that the modal should be shown
     showModal.value = true;
     };
 
+
     const closeModal = () => {
-    showModal.value = false;
+        showModal.value = false;
     };
 
-    const logIn = () => {
+    const SignIn = () => {
         signInWithEmailAndPassword(getAuth(), email.value, password.value)
             // eslint-disable-next-line no-unused-vars
             .then((data) => {
                 console.log("Successfully signed in!")
-                router.push('/adminhome')
+                if (router.currentRoute.value.path === '/adminpanel') {
+                    // If the router is already at /adminpanel, close the modal
+                    closeModal()
+                } else {
+                    router.push('/adminpanel');
+                }
+                
                
             })
             .catch((error) => {
