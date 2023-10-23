@@ -2,11 +2,11 @@
     <div>
         <TabGroup w-screen as="navbar" v-model:selected="selectedTab" v-if="isLoggedIn">
             <TabList class="flex space-x-4 justify-evenly ">
-                <Tab class="cursor-pointer">Admin Home</Tab>
+                <Tab class="cursor-pointer">My Schedule</Tab>
                 <Tab class="cursor-pointer">My Sites</Tab>
             
                 <div class="search ">
-                    <input type="text" class="search__input w-80" placeholder="Search Your Plant Home">
+                    <input name="searchbar" type="text" class="search__input w-80" placeholder="Search Your Plant Home">
                     <button class="search__button bg-black">
                     </button>
                 </div>
@@ -30,7 +30,7 @@
        
             <TabPanels>
                 <TabPanel>
-                    <About/>
+                    <Schedule/>
                 </TabPanel>
                 <TabPanel>
                     <MySitesView/>
@@ -83,7 +83,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { users, getUsersData } from '../modules/users';
 import { watch } from 'vue';
-import About from './AboutView.vue';
+import Schedule from './ScheduleView.vue';
 import MySitesView from './MySitesView.vue';
 import SignIn from '../components/SignIn.vue';
 

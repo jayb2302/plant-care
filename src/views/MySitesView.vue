@@ -9,11 +9,10 @@
       </div>
     </div>
     <!-- Plants for selected site -->
-    <div class="plantsList-wrapper w-10/12 flex flex-col p-1">
-      <h2 class="text-xl font-bold mb-4">Selected Site</h2>
-      <div class="plantsList-content mt-3" v-if="selectedSite">
+    <div class="plantsList-wrapper  flex flex-col p-1">
+      <div class="plantsList-content  mt-3" v-if="selectedSite">
         <h4 class="text-2xl mb-5 ">Plants in {{ selectedSite.name }}</h4>
-        <div class="myplant-card  flex justify-between flex-wrap overflow-y-auto" style="min-height: 50vh; max-height: 60vh;">
+        <div class="myplant-card  flex gap-5 item-center flex-wrap overflow-y-auto" style="">
           <div class="myplant  w-1/4 p-2" v-for="plant in plants" :key="plant.id">
             <div v-motion
                   :initial="{
@@ -31,7 +30,7 @@
                 <div class="plant-details p-2 ">
                   <img class="img mt-2 mb-2 " :src="plant.image_url" alt="">
                 </div>
-                <div class="plant-details pl-1">
+                <div class="plant-details capitalize pl-1">
                   <p>Water Frequency: {{ plant.water_frequency }}</p>
                   <p>Light Conditions: {{ plant.light_conditions }}</p>
                   <p>Care Level: {{ plant.care_level }}</p>
@@ -188,7 +187,7 @@ const selectSite = async (site) => {
         padding: 2rem 0.5rem;
       
    .myplant-card {
-   
+    
     padding: 2em 1.4em;
      .myplant {
        background-color: $white;

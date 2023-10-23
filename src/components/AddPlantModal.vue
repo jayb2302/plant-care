@@ -97,6 +97,8 @@ const plantResults = ref([])
 const isLoading = ref(false);
 const lastWateredDate = ref('');
 
+const isAddSiteModalOpen = ref(false);
+
 const performSearchRequest = async () => {
   isLoading.value = true; // Show loading indicator
   const data = await getPlantList({
@@ -115,12 +117,6 @@ const selectPlant = async (plant) => {
   selectedPlant.value = data;
 };
 
-
-
-
-
-
-
 const fetchSites = async () => {
   try {
     const sitesCollection = collection(db, 'sites');
@@ -135,7 +131,6 @@ const fetchSites = async () => {
   }
 };
 
-const isAddSiteModalOpen = ref(false);
 
 
 
@@ -153,6 +148,7 @@ const confirmPlantSelection = async () => {
 
 const addPlantToFirestore = async (plantData, siteId) => {
   const plantCollection = collection(db, 'plants');
+  
 
   // Create a new document in the 'plants' collection with the selected plant's details
   const newPlantDoc = await addDoc(plantCollection, {
@@ -163,7 +159,8 @@ const addPlantToFirestore = async (plantData, siteId) => {
     light_conditions: plantData.sunlight.join(', '),
     care_level: plantData.care_level,
     last_watered: lastWateredDate.value,
-    siteId: siteId
+    siteId: siteId,
+    
   });
 
   return newPlantDoc; // Return the newly added document

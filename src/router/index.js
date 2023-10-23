@@ -12,16 +12,16 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+      path: '/myschedule',
+      name: 'My Schedule',
+      component: () => import('../views/ScheduleView.vue')
     },
     
     {
       path: '/signup',
       name: 'SignUp',
       // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
+      // this generates a separate chunk (Schedule.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../components/SignUp.vue')
     },
@@ -46,7 +46,7 @@ const router = createRouter({
       path: '/adminhome',
       name: 'adminhome',
       // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
+      // this generates a separate chunk (Schedule.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AdminHome.vue')
     },
@@ -55,14 +55,8 @@ const router = createRouter({
       name: 'createsite',
 
       component: () => import('../components/CreateSite.vue')
-    }
-    ,
-    {
-      path: '/siteselection',
-      name: 'siteSelection',
-     
-      component: () => import('../components/SiteSelectionModal.vue')
-    }
+    },
+   
   ]
 })
 
