@@ -42,14 +42,7 @@ const router = createRouter({
       name: 'SignIn',
       component: () => import('../components/SignIn.vue')
     },
-    {
-      path: '/adminhome',
-      name: 'adminhome',
-      // route level code-splitting
-      // this generates a separate chunk (Schedule.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AdminHome.vue')
-    },
+    
     {
       path: '/createsite',
       name: 'createsite',
