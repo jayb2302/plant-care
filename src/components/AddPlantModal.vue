@@ -12,6 +12,7 @@
         
         <!-- Modal content for adding a new plant -->
         <div class="plant-selection relative w-1/2  flex flex-col gap-5    ">
+       
           <input
             type="text"
             class="search__input p-4 "
@@ -32,6 +33,8 @@
               </li>
             </template>
           </ul>
+          <label for="myPlantName">My Plant Name:</label>
+            <input type="text" id="myPlantName"/>
           <div class=" flex flex-col ">
             <label for="siteSelection">Select a Site:</label>
             <select class="select" id="siteSelection" v-model="selectedSite">
@@ -45,6 +48,7 @@
           <div class="flex flex-col">
             <label for="lastWateredDate">Last Watered:</label>
             <input type="date" id="lastWateredDate" v-model="lastWateredDate" />
+          
           </div>
             
         </div>

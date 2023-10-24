@@ -1,11 +1,11 @@
 <template>
-  <div class="schedule w-[95vw] h-screen">
+  <div class="schedule w-[95vw] max-h-[95vh]">
    
    
     <main class="shadow mt-3 flex">
       <div class="task-container w-4/12 flex flex-col">
         <div class="plant-tasks__past h-32">
-          <h2 class="text-2lx">Plants Past Watering</h2>
+          <h2 class="text-2lx">Urgent</h2>
           <ul>
             <li v-for="(plant, index) in pastWateringPlants" :key="index">
             <div v-if="plant">
@@ -54,14 +54,19 @@
         <!-- Column 5: Plants Countdown -->
         <div class="countdown-container w-4/12   ">
           <h2 class="text-2xl">Plants Countdown</h2>
-          <div class="div h-2/3 overflow-scroll cardbg">
+          <div class="div h-2/3 overflow-y-auto cardbg">
           <ul class="countdown-card  flex flex-col  ">
-            <li class="flex flex-col relative p-2 capitalize" v-for="(plant, index) in plants" :key="index">
+            <li class="flex flex-col relative  p-2 capitalize" v-for="(plant, index) in plants" :key="index">
               <strong>{{ plant.common_name }}</strong> - Water in {{ getDaysUntilWatering(plant) }} days
             
-              <button class="absolute bottom-0 right-0  " @click="markWateringAsDone(plant)">
+             <button
+               class="absolute bottom-0 right-0"
+               :class="{'bg-gray-200': !markWateringAsDone(plant)}"
+               @click="markWateringAsDone(plant)">
                 <span> Water </span>
-                <img src="../components/icons/waterdrop.svg" class="w-10 waterdrop" alt="">                
+                <svg class="waterdrop" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-5 -2 24 24">
+                  <path fill="#D4D8EB" d="M2 13a5 5 0 0 0 10 0c0-1.726-1.66-5.031-5-9.653C3.66 7.969 2 11.274 2 13zM7 0c4.667 6.09 7 10.423 7 13a7 7 0 0 1-14 0c0-2.577 2.333-6.91 7-13z"/>
+                </svg>              
               </button>
             </li>
           </ul>
@@ -122,9 +127,6 @@ const daysAgo = (lastWateredDate) => {
   return `${daysAgo} days ago`;
 };
 
-
-// Water Plants Past day - Water Plants Today - Water Plants Tomorrow
-
 const markWateringAsDone = async (plant) => {
   const plantRef = doc(db, 'plants', plant.id);
 
@@ -153,6 +155,7 @@ const markWateringAsDone = async (plant) => {
     console.error('Error updating plant watering:', error);
   }
 };
+
 const updatePlantData = async () => {
   await getPlantsData();
 
@@ -333,12 +336,18 @@ header {
 
 .waterdrop{
   
- filter: drop-shadow(3px 5px 1px $water);
+  filter: drop-shadow(3px 1px 1px $water) drop-shadow(-2px 1px 1px $white) drop-shadow(0px 0px 5px #d1c5c568) ;
   transition: all 0.5s ease-in-out; 
+  
   &:hover{
   transition: all 0.5s ease-in-out; 
   transform: scale(1.2);
-  
+  color: $beige;
+  }
+  &:active{
+    transition: all 0.5s ease-in-out; 
+    transform: scale(1.2);
+    color: $focus;
   }
 
 
