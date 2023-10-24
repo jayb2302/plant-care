@@ -1,48 +1,84 @@
 <template>
-  <div class="flex  w-screen my-5">
+  <div class="flex  w-[95vw] h-screen ">
     <!-- Sidebar for sites -->
-    <div class="sitesSidebar w-2/12 p-4 border-r">
+  <div class="sitesSidebar w-2/12 p-4 border-r hidden md:block">
       <h2 class="text-xl font-bold mb-4">My Sites</h2>
-      <div 
-       v-for="site in sites" :key="site.id" @click="selectSite(site)" class="cursor-pointer pl-4 mb-2">
+      <div
+        v-for="site in sites"
+        :key="site.id"
+        @click="selectSite(site)"
+        class="cursor-pointer pl-4 mb-2"
+        :active="selectedSite && selectedSite.id === site.id"
+        :class="{
+          'bg-gray-200': selectedSite && selectedSite.id === site.id,
+        }"
+      >
         <h3 class="text-lg">{{ site.name }}</h3>
       </div>
     </div>
+
+    <!-- Toggle button for the sidebar (shown on small screens) -->
+    <div class="md:hidden w-1/12 p-4 border-r">
+      <button @click="toggleSidebar" class="cursor-pointer">
+        <!-- You can use a hamburger icon or any other icon you prefer -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+    </div>
+
     <!-- Plants for selected site -->
-    <div class="plantsList-wrapper  flex flex-col p-1">
-      <div class="plantsList-content  mt-3" v-if="selectedSite">
-        <h4 class="text-2xl mb-5 ">Plants in {{ selectedSite.name }}</h4>
-        <div class="myplant-card  flex gap-5 item-center flex-wrap overflow-y-auto" style="">
-          <div class="myplant  w-1/4 p-2" v-for="plant in plants" :key="plant.id">
+    <div class="plantsList-wrapper lg:w-10/12 mt-5 flex flex-col p-1">
+      <div class="plantsList-content overflow-scroll" v-if="selectedSite">
+        <h2 class="text-2xl mb-5 pl-5">Plants in {{ selectedSite.name }}</h2>
+        <div class="myplant-card flex flex-wrap  gap-2 justify-center  " style="">
+          <div class="myplant relative p-2 w-full md:w-1/2 lg:w-1/4" v-for="(plant) in plants" :key="plant.id" >
             <div v-motion
-                  :initial="{
-                    opacity: 0,
-                    y: 100,
-                    
-                  }"
-                  :enter="{
-                    opacity: 1,
-                    y: 0,
-            }">
-          
-              <div v-if="plant.siteId === selectedSite.id">
-                <h2 class="text-1xl pl-1 capitalize"><strong>{{ plant.common_name }}</strong></h2>
-                <div class="plant-details p-2 ">
-                  <img class="img mt-2 mb-2 " :src="plant.image_url" alt="">
+              :initial="{
+                opacity: 0,
+                y: 100,
+              }"
+              :enter="{
+                opacity: 1,
+                y: 0,
+              }"
+            >
+              <div class="relative " v-if="plant.siteId === selectedSite.id">
+                <div class="plant-details p-2">
+                  <h2 class="text-1xl pl-1 capitalize"><strong>{{ plant.common_name }}</strong></h2>
+
+                  <img class="img mt-2 mb-2" :src="plant.image_url" alt="">
                 </div>
                 <div class="plant-details capitalize pl-1">
                   <p>Water Frequency: {{ plant.water_frequency }}</p>
                   <p>Light Conditions: {{ plant.light_conditions }}</p>
                   <p>Care Level: {{ plant.care_level }}</p>
-                  <button class="delete-btn" @click="confirmDelete(plant)">Delete</button>
+                  <button class=" absolute top-0 right-0" @click="confirmDelete(plant)">
+                    <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
+                        <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
+                    </svg>
+                  </button>
                 </div>
-                </div>
-              </div> 
+              </div>
+            </div>
           </div>
+          <!--Empty placeholders for missing cards in the last row -->
+          <div v-for="i in 4 - (plants.length % 4)" :key="`placeholder-${i}`" style=""></div>
         </div>
         <!-- Delete Confirmation Modal -->
         <teleport to="body" v-if="isDeleteConfirmationOpen">
-          <transition 
+          <transition
             v-motion
             :initial="{
               backgroundColor: '$lightgray',
@@ -54,21 +90,20 @@
               backgroundColor: '$input',
               opacity: 1,
               y: 0,
-
-            }"  
-          > 
-          <div class="modal  delete-confirmation-modal">
-            <div class="modal-content  flex flex-col   items-center">
-              <p class=" pb-5 text-2xl">Are you sure you want to delete</p> 
-              <img class="w-40 pt-3 pb-3" :src="selectedPlantToDelete.image_url" alt="">
-              <p class="plantName">{{ selectedPlantToDelete.common_name }}</p> 
-              <p class="pb-5"> from your {{ selectedSite.name }}?</p> 
-              <div class="confirmationButton-wrapper text-1xl flex gap-2">
-                <button class="button w-40" @click="deletePlant">Yes</button>
-                <button class="button w-40" @click="cancelDelete">No</button>
+            }"
+          >
+            <div class="modal delete-confirmation-modal">
+              <div class="modal-content flex flex-col items-center">
+                <p class="pb-5 text-2xl">Are you sure you want to delete</p>
+                <img class="w-40 pt-3 pb-3" :src="selectedPlantToDelete.image_url" alt="">
+                <p class="plantName">{{ selectedPlantToDelete.common_name }}</p>
+                <p class="pb-5"> from your {{ selectedSite.name }}?</p>
+                <div class="confirmationButton-wrapper text-1xl flex gap-2">
+                  <button class="button w-40" @click="deletePlant">Yes</button>
+                  <button class="button w-40" @click="cancelDelete">No</button>
+                </div>
               </div>
             </div>
-          </div>
           </transition>
         </teleport>
       </div>
@@ -81,6 +116,7 @@ import { ref, onMounted} from 'vue';
 import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 
+
 const sites = ref([]);
 const plants = ref([]);
 const selectedSite = ref(null);
@@ -89,7 +125,6 @@ const selectedSite = ref(null);
 
 const selectedPlantToDelete = ref(null);
 const isDeleteConfirmationOpen = ref(false);
-
 
 
 const confirmDelete = (plant) => {
@@ -145,14 +180,11 @@ const selectSite = async (site) => {
   background-color: $lightgray;
   }
   
-  
   .plantName {
     font-weight: bold;
     text-transform: capitalize;
     text-decoration: underline;
   }
-
-  
  }
 
 .img {
@@ -171,8 +203,7 @@ const selectSite = async (site) => {
 
 .plantsList-wrapper {
   font-family: $title-font;
-  .plantsList-content {
-    background-image:
+  background-image:
     radial-gradient(at 86% 10%, hsla(28,11%,71%,1) 0px, transparent 50%),
     radial-gradient(at 92% 92%, hsla(60,0%,34%,1) 0px, transparent 50%),
     radial-gradient(at 59% 31%, hsla(0,22%,54%,1) 0px, transparent 50%),
@@ -184,16 +215,18 @@ const selectSite = async (site) => {
         border: 1px solid rgba(150, 150, 150, 0.284);
         border-radius: 10px;
         box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;       
-        padding: 2rem 0.5rem;
+    
+  .plantsList-content {
+    
       
    .myplant-card {
     
-    padding: 2em 1.4em;
+    
      .myplant {
        background-color: $white;
        border-radius: 10px;
        box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, ;       
-      width: clamp(calc(25vw - 6rem), 10vw, 30vw);
+     
       h2 {
         font-family: $sub-heading-font;
         letter-spacing: 1px;

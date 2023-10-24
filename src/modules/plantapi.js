@@ -50,7 +50,7 @@
 
 
 
-const API_KEY = 'sk-vIxu6530fd335e3b42549'
+const API_KEY = 'sk-DFLt652e3d021aa6e2511'
 
 export const getPlantList = async (params = {}) => {
     const uri = new URL('https://perenual.com/api/species-list')

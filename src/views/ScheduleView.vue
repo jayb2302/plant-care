@@ -1,76 +1,22 @@
 <template>
-  <div class="schedule min-h-full">
-    <header class="shadow">
-      <div class="belowheader mx-auto flex justify-between max-w-7xl px-1 py-6 sm:px-6 lg:px-2">
-        <h1 class="adminh1">My Schedule</h1>
-        <div class="btn-wrapper gap-10 flex">
-          <button class="buttonadmin" @click="showAddPlantModal = true">
-            <img class="leaf" src="../assets/img/twoleaves.svg" style="width: 40px; height: 40px;" alt="Two leaf icon" />
-            Add Plant
-            <div class="buttonadmin__horizontal"></div>
-            <div class="buttonadmin__vertical"></div>
-          </button>
-          <button class="buttonadmin" @click="showAddSiteModal = true">
-            Add Site
-            <div class="buttonadmin__horizontal"></div>
-            <div class="buttonadmin__vertical"></div>
-          </button>
-        </div>
-      </div>
-
-      <div id="modal-container">
-        <Teleport to="body">
-          <div class="modal-background dark:bg-slate-500">
-            <transition
-              v-motion
-              :initial="{
-                opacity: 0,
-                y: 0,
-              }"
-              :variants="{ custom: { scale: 2 } }"
-              :enter="{
-                opacity: 1,
-                y: 0,
-              }"
-            >
-              <AddPlantModal @close="handleModalClose" class="two" v-if="showAddPlantModal" />
-            </transition>
-          </div>
-        </Teleport>
-
-        <Teleport to="body">
-          <div class="modal-background">
-            <transition
-              v-motion
-              :initial="{
-                opacity: 0,
-                y: 0,
-              }"
-              :variants="{ custom: { scale: 2 } }"
-              :enter="{
-                opacity: 1,
-                y: 0,
-              }"
-            >
-              <AddSiteModal :onConfirm="handleSiteSelection" @close="handleModalClose" class="two bg-slate-400" v-if="showAddSiteModal" />
-            </transition>
-          </div>
-        </Teleport>
-      </div>
-    </header>
+  <div class="schedule w-[95vw] h-screen">
    
-    <main class="shadow mt-3 flex w-12/12">
+   
+    <main class="shadow mt-3 flex">
       <div class="task-container w-4/12 flex flex-col">
-        <div class="plant-tasks__past">
+        <div class="plant-tasks__past h-32">
           <h2 class="text-2lx">Plants Past Watering</h2>
           <ul>
             <li v-for="(plant, index) in pastWateringPlants" :key="index">
-              <strong>{{ plant.common_name }}</strong> - {{ formatDate(plant.last_watered) }}
+            <div v-if="plant">
+              <strong>{{ plant.common_name }}</strong> - {{ daysAgo(plant.last_watered) }}
+            </div>
+            <!--   <strong>{{ plant.common_name }}</strong> - {{ daysAgo(plant.last_watered) }} -->
             </li>
           </ul>
         </div>
         <!-- Column 2: Plants to Water Today -->
-        <div class="plant-tasks__past">
+        <div class="plant-tasks__past h-32">
           <h2 class="h2 text-2lx">Plants to Water Today</h2>
           <ul>
             <li v-for="(plant, index) in plantsToWaterToday" :key="index">
@@ -79,7 +25,7 @@
           </ul>
         </div>
            <!-- Column 3: Plants to Water Tomorrow -->
-        <div class="plant-tasks__past">
+        <div class="plant-tasks__past h-32">
           <h2 class="text-2lx">Plants to Water Tomorrow</h2>
           <ul>
             <li v-for="(plant, index) in plantsToWaterTomorrow" :key="index">
@@ -106,68 +52,53 @@
       </div>
   
         <!-- Column 5: Plants Countdown -->
-        <div class="plants-to-water-container">
+        <div class="countdown-container w-4/12   ">
           <h2 class="text-2xl">Plants Countdown</h2>
-          <ul class="column-card flex flex-col">
-            <li class="flex flex-col" v-for="(plant, index) in plants" :key="index">
+          <div class="div h-2/3 overflow-scroll cardbg">
+          <ul class="countdown-card  flex flex-col  ">
+            <li class="flex flex-col relative p-2 capitalize" v-for="(plant, index) in plants" :key="index">
               <strong>{{ plant.common_name }}</strong> - Water in {{ getDaysUntilWatering(plant) }} days
-              <button @click="markWateringAsDone(plant)">Mark as Done</button>
+            
+              <button class="absolute bottom-0 right-0  " @click="markWateringAsDone(plant)">
+                <span> Water </span>
+                <img src="../components/icons/waterdrop.svg" class="w-10 waterdrop" alt="">                
+              </button>
             </li>
           </ul>
+          </div>
+          
         </div>
      
     </main>
+   
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, } from 'vue';
-import { calculateNextWateringDate, useNextWateringDates } from '../modules/nextWatering';
-import AddPlantModal from '@/components/AddPlantModal.vue';
-import AddSiteModal from '@/components/AddSiteModal.vue';
-
+import { calculateNextWateringDate } from '@/modules/nextWatering';
 import { getFirestore,  doc, updateDoc } from 'firebase/firestore';
-import { plants, getPlantsData } from '../modules/plants';
+import {
+  plants,
+  getPlantsData,
+  pastWateringPlants,
+  plantsToWaterToday,
+  plantsToWaterTomorrow
+} from '@/./modules/plants';
 const db = getFirestore();
 
-const showAddPlantModal = ref(false);
-const showAddSiteModal = ref(false);
-const pastWateringPlants = ref([]);
-const plantsToWaterToday = ref([]);
-const plantsToWaterTomorrow = ref([]);
-const plantCareTips = ref([]);
+const nextWateringDates = ref([]);
 
-const fetchPlantsAndCalculateNextWateringDates = async () => {
-  await getPlantsData();
+onMounted(() => {
+  getPlantsData();
 
-  // Calculate next watering dates and categorize plants
-  const currentDate = new Date();
   nextWateringDates.value = plants.value.map((plant) => {
     return calculateNextWateringDate(plant.last_watered, plant.water_frequency);
   });
+});
 
-  for (let i = 0; i < plants.value.length; i++) {
-    const plant = plants.value[i];
-    const nextWateringDate = nextWateringDates.value[i].date;
-    if (nextWateringDate < currentDate) {
-      pastWateringPlants.value.push(plant);
-    } else if (nextWateringDate.toDateString() === currentDate.toDateString()) {
-      plantsToWaterToday.value.push(plant);
-    } else if (nextWateringDate.toDateString() === new Date(currentDate.getTime() + 24 * 60 * 60 * 1000).toDateString()) {
-      plantsToWaterTomorrow.value.push(plant);
-    }
-  }
 
-  // Populate plantCareTips
-  plantCareTips.value = [
-    "Water your plants on a consistent schedule.",
-    "Provide adequate sunlight for each plant's needs.",
-    "Fertilize your plants regularly but not excessively.",
-    "Prune and trim your plants when necessary.",
-  ];
-};
 
-const { nextWateringDates } = useNextWateringDates();
 
 // Function to calculate days until watering for a plant
 const getDaysUntilWatering = (plant) => {
@@ -177,68 +108,72 @@ const getDaysUntilWatering = (plant) => {
   return Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 };
 
-
 onMounted(() => {
-  fetchPlantsAndCalculateNextWateringDates();
-  
+  getPlantsData();
 });
 
-const formatDate = (date) => {
-  if (date instanceof Date && !isNaN(date)) {
-    const options = { year: 'numeric', month: 'short', day: '2-digit' };
-    return date.toLocaleDateString(undefined, options);
-  } else {
-    return 'Invalid Date';
-  }
-};
-
-
-const handleModalClose = () => {
-  showAddPlantModal.value = false;
-  showAddSiteModal.value = false;
-};
-
-const updatePlantData = async () => {
-  await getPlantsData();
-  pastWateringPlants.value = [];
-  plantsToWaterToday.value = [];
-  plantsToWaterTomorrow.value = [];
-
+const daysAgo = (lastWateredDate) => {
+  const lastWatered = new Date(lastWateredDate);
   const currentDate = new Date();
-  nextWateringDates.value = plants.value.map((plant) => {
-    return calculateNextWateringDate(plant.last_watered, plant.water_frequency);
-  });
 
-  for (let i = 0; i < plants.value.length; i++) {
-    const plant = plants.value[i];
-    const nextWateringDate = nextWateringDates.value[i].date;
-    if (nextWateringDate < currentDate) {
-      pastWateringPlants.value.push(plant);
-    } else if (nextWateringDate.toDateString() === currentDate.toDateString()) {
-      plantsToWaterToday.value.push(plant);
-    } else if (nextWateringDate.toDateString() === new Date(currentDate.getTime() + 24 * 60 * 60 * 1000).toDateString()) {
-      plantsToWaterTomorrow.value.push(plant);
-    }
-  }
+  const timeDiff = currentDate - lastWatered;
+  const daysAgo = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+  return `${daysAgo} days ago`;
 };
 
-const markWateringAsDone = (plant) => {
+
+// Water Plants Past day - Water Plants Today - Water Plants Tomorrow
+
+const markWateringAsDone = async (plant) => {
   const plantRef = doc(db, 'plants', plant.id);
 
   // Calculate the new lastWatered date based on the current date
   const currentDate = new Date();
   const newLastWatered = new Date(currentDate.getTime());
 
-  // Update the Firestore document
-  updateDoc(plantRef, { last_watered: newLastWatered.toISOString() })
-    .then(() => {
-      console.log('Plant watering marked as done successfully');
-      // After marking as done, update the data and recalculate
+  try {
+    // Update the Firestore document
+    await updateDoc(plantRef, { last_watered: newLastWatered.toISOString() });
+    console.log('Plant watering marked as done successfully');
+
+    // Find the index of the updated plant in the plants array
+    const plantIndex = plants.value.findIndex((p) => p.id === plant.id);
+
+    if (plantIndex !== -1) {
+      // Update the last_watered property of the plant in the local array
+      plants.value[plantIndex].last_watered = newLastWatered.toISOString();
+      
+      // Re-run the updatePlantData function to categorize the tasks
       updatePlantData();
-    })
-    .catch((error) => {
-      console.error('Error updating plant watering:', error);
-    });
+    } else {
+      console.error('Plant not found in the local array.');
+    }
+  } catch (error) {
+    console.error('Error updating plant watering:', error);
+  }
+};
+const updatePlantData = async () => {
+  await getPlantsData();
+
+  const currentDate = new Date();
+
+  pastWateringPlants.value = plants.value.filter((plant) => {
+    const nextWateringDate = calculateNextWateringDate(plant.last_watered, plant.water_frequency).date;
+    const daysUntilWatering = Math.ceil((nextWateringDate - currentDate) / (1000 * 60 * 60 * 24));
+    return daysUntilWatering < 0;
+  });
+
+  plantsToWaterToday.value = plants.value.filter((plant) => {
+  const nextWateringDate = calculateNextWateringDate(plant.last_watered, plant.water_frequency).date;
+  const daysUntilWatering = Math.ceil((nextWateringDate - currentDate) / (1000 * 60 * 60 * 24));
+  return daysUntilWatering === 0;
+  });
+  plantsToWaterTomorrow.value = plants.value.filter((plant) => {
+    const nextWateringDate = calculateNextWateringDate(plant.last_watered, plant.water_frequency).date;
+    const daysUntilWatering = Math.ceil((nextWateringDate - currentDate) / (1000 * 60 * 60 * 24));
+    return daysUntilWatering === 1;
+  });
 };
 
 const showTips = ref(false);
@@ -246,7 +181,6 @@ const showTips = ref(false);
 const toggleTips = () => {
   showTips.value = !showTips.value;
 };
-
 
 </script>
 
@@ -257,17 +191,13 @@ const toggleTips = () => {
 
 nav {
   visibility: hidden;
-}
-.schedule {
- 
-  height: 100vh;
-  width: 95vw;
   
 }
+
  
 header {
 
-  .belowheader {
+  .header-container{
     height: 10vh;
     .adminh1 {
     font-size: 3em;
@@ -401,6 +331,17 @@ header {
 }
 }
 
+.waterdrop{
+  
+ filter: drop-shadow(3px 5px 1px $water);
+  transition: all 0.5s ease-in-out; 
+  &:hover{
+  transition: all 0.5s ease-in-out; 
+  transform: scale(1.2);
+  
+  }
 
+
+}
 </style>
 

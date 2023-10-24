@@ -2,18 +2,67 @@
 import { ref } from 'vue';
 import { collection, onSnapshot, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from '../firebase.js';
+import { calculateNextWateringDate } from './nextWatering';
+import { useNextWateringDates } from './nextWateringUtils';
 
 const plants = ref([]);
 const plantDataRef = collection(db, 'plants');
 
-const getPlantsData = () => {
-  onSnapshot(plantDataRef, (snapshot) => {
+const pastWateringPlants = ref([]);
+const plantsToWaterToday = ref([]);
+const plantsToWaterTomorrow = ref([]);
+const plantCareTips = ref([]);
+
+const getPlantsData = async () => {
+  await onSnapshot(plantDataRef, (snapshot) => {
+   
     plants.value = snapshot.docs.map(doc => ({
       id: doc.id,
-      ...doc.data()
+      ...doc.data(),
+      common_name: doc.data().common_name.length < 25 ? doc.data().common_name : doc.data().common_name.substring(0, 14) + '...'
     }))
+    fetchPlantsAndCalculateNextWateringDates();
   });
 };
+const { nextWateringDates } = useNextWateringDates();
+
+
+const fetchPlantsAndCalculateNextWateringDates = async () => {
+  // Calculate next watering dates and categorize plants
+  const currentDate = new Date();
+  nextWateringDates.value = plants.value.map((plant) => {
+    return calculateNextWateringDate(plant.last_watered, plant.water_frequency);
+  });
+
+  pastWateringPlants.value = [];
+  plantsToWaterToday.value = [];
+  plantsToWaterTomorrow.value = [];
+
+  for (let i = 0; i < plants.value.length; i++) {
+    const plant = plants.value[i];
+    const nextWateringDate = nextWateringDates.value[i].date;
+    const daysUntilWatering = Math.ceil((nextWateringDate - currentDate) / (1000 * 60 * 60 * 24));
+
+    if (daysUntilWatering < 0) {
+      pastWateringPlants.value.push(plant);
+    } else if (daysUntilWatering === 0) {
+      plantsToWaterToday.value.push(plant);
+    } else if (daysUntilWatering === 1) {
+      plantsToWaterTomorrow.value.push(plant);
+    }
+  }
+
+};
+
+ // Populate plantCareTips
+ plantCareTips.value = [
+  "Water your plants on a consistent schedule.",
+  "Provide adequate sunlight for each plant's needs.",
+  "Fertilize your plants regularly but not excessively.",
+  "Prune and trim your plants when necessary.",
+];
+
+
 
 const addPlant = async (newPlantData) => {
   try {
@@ -33,4 +82,4 @@ const deletePlant = async (id) => {
   }
 };
 
-export { plants, getPlantsData, addPlant, deletePlant };
+export { plants, getPlantsData, addPlant, deletePlant, pastWateringPlants, plantsToWaterToday, plantsToWaterTomorrow, plantCareTips };

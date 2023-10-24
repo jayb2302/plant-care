@@ -1,42 +1,106 @@
 <template>
-    <div>
-        <TabGroup w-screen as="navbar" v-model:selected="selectedTab" v-if="isLoggedIn">
-            <TabList class="flex space-x-4 justify-evenly ">
-                <Tab class="cursor-pointer">My Schedule</Tab>
-                <Tab class="cursor-pointer">My Sites</Tab>
-            
-                <div class="search ">
-                    <input name="searchbar" type="text" class="search__input w-80" placeholder="Search Your Plant Home">
-                    <button class="search__button bg-black">
-                    </button>
-                </div>
-            <!-- User Profile Dropdown -->
-                <div class="ml-4 flex items-center md:ml-6">
-                    <div>
-                        <button class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" @click="toggleDropdown">
-                            <span class="absolute -inset-1.5" />
-                            <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full" src="" alt="" />
-                        </button>
-                    </div>
-                    <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                        <ul v-if="isDropdownOpen" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" @click.stop>
-                        <p>{{ users.length > 0 ? users[0].username : 'Loading...' }}</p>
-                        <li @click="handleSignOut">Sign Out</li>
-                        </ul>
-                    </transition>
-                </div>
-            </TabList>
-       
-            <TabPanels>
-                <TabPanel>
-                    <Schedule/>
-                </TabPanel>
-                <TabPanel>
-                    <MySitesView/>
-                </TabPanel>
-            </TabPanels>
-        </TabGroup>
+  <div>
+    <div class="admin flex justify-end pr-5">
+    
+      <div class="search ">
+          <input name="searchbar" type="text" class="search__input w-80" placeholder="Search Your Plant Home">
+          <button class="search__button bg-black">
+          </button>
+      </div>
+  <!-- User Profile Dropdown -->
+      <div class="ml-4 flex items-center md:ml-6">
+          <div>
+              <button class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" @click="toggleDropdown">
+                  <span class="absolute -inset-1.5" />
+                  <span class="sr-only">Open user menu</span>
+                  <img class="h-8 w-8 rounded-full" src="" alt="" />
+              </button>
+          </div>
+          <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+              <ul v-if="isDropdownOpen" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" @click.stop>
+              <p>{{ users.length > 0 ? users[0].username : 'Loading...' }}</p>
+              <li @click="handleSignOut">Sign Out</li>
+              </ul>
+          </transition>
+      </div>
+    </div>
+    <header class="shadow">
+      <div class="header-container mx-auto  flex justify-between max-w-7xl px-1 py-6 sm:px-6 lg:px-2">
+        <h1 class="adminh1">My Schedule</h1>
+        <div class="btn-wrapper gap-10 flex">
+          <button class="buttonadmin" @click="showAddPlantModal = true">
+            <img class="leaf" src="../assets/img/twoleaves.svg" style="width: 40px; height: 40px;" alt="Two leaf icon" />
+            Add Plant
+            <div class="buttonadmin__horizontal"></div>
+            <div class="buttonadmin__vertical"></div>
+          </button>
+          <button class="buttonadmin"  @click="showAddSiteModal = true">
+            Add Site
+            <div class="buttonadmin__horizontal"></div>
+            <div class="buttonadmin__vertical"></div>
+          </button>
+        </div>
+      </div>
+      <div id="modal-container">
+          <Teleport to="body">
+            <div class="modal-background dark:bg-slate-500">
+              <transition
+                v-motion
+                :initial="{
+                  opacity: 0,
+                  y: 0,
+                }"
+                :variants="{ custom: { scale: 2 } }"
+                :enter="{
+                  opacity: 1,
+                  y: 0,
+                }"
+              >
+                <AddPlantModal @close="handleModalClose" class="two" v-if="showAddPlantModal" />
+              </transition>
+            </div>
+          </Teleport>
+
+          <Teleport to="body">
+            <div class="modal-background">
+              <transition
+                v-motion
+                :initial="{
+                  opacity: 0,
+                  y: 0,
+                }"
+                :variants="{ custom: { scale: 2 } }"
+                :enter="{
+                  opacity: 1,
+                  y: 0,
+                }"
+              >
+                <AddSiteModal :onConfirm="handleConfirm" @close="handleModalClose" class="two bg-slate-400" v-if="showAddSiteModal" />
+              </transition>
+            </div>
+          </Teleport>
+      </div>
+    </header>
+    <TabGroup class="tabgroup" as="navbar" v-model:selected="selectedTab" v-if="isLoggedIn">
+        <TabList class="flex space-x-4 justify-start ">
+          <Tab class="cursor-pointer">
+            <h2>My Schedule</h2>
+          </Tab>
+          <Tab class="cursor-pointer">
+            <h2>My Sites</h2> 
+          </Tab>
+      
+      </TabList>
+  
+      <TabPanels>
+          <TabPanel>
+              <Schedule/>
+          </TabPanel>
+          <TabPanel>
+              <MySitesView/>
+          </TabPanel>
+      </TabPanels>
+  </TabGroup>
         <div v-else class="w-screen flex-col justify-center">
             <p class="p-tag text-center">Please log in to access this page.</p>
             <button id="btn-in" class="w-screen" @click="showSignInModal">Log In</button>
@@ -86,14 +150,16 @@ import { watch } from 'vue';
 import Schedule from './ScheduleView.vue';
 import MySitesView from './MySitesView.vue';
 import SignIn from '../components/SignIn.vue';
-
-
+import AddPlantModal from '@/components/AddPlantModal.vue';
+import AddSiteModal from '@/components/AddSiteModal.vue';
 
 const selectedTab = ref(0);
 const isLoggedIn = ref(false);
 
 const isDropdownOpen = ref(false);
 const showModal = ref(false); // This variable controls the modal visibility
+const showAddPlantModal = ref(false);
+const showAddSiteModal = ref(false);
 
 const showSignInModal = () => {
   showModal.value = true;
@@ -102,6 +168,16 @@ const showSignInModal = () => {
 const closeModal = () => {
   showModal.value = false;
 };
+
+const handleConfirm = () => {
+  showAddSiteModal.value = false;
+};
+
+const handleModalClose = () => {
+  showAddPlantModal.value = false;
+  showAddSiteModal.value = false;
+};
+
 
 const toggleDropdown = (event) => {
   event.stopPropagation();
@@ -160,4 +236,9 @@ watch(isLoggedIn, (newIsLoggedIn) => {
     nav{
         visibility: hidden;
     }
+    h2 {
+        font-family: $title-font;
+        font-size: 1.3rem;
+      }
+    
 </style>
