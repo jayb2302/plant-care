@@ -1,5 +1,5 @@
 <template>
-  <div class="flex  w-[95vw] h-screen ">
+  <div class="flex  w-[95vw]  ">
     <!-- Sidebar for sites -->
   <div class="sitesSidebar w-2/12 p-4 border-r hidden md:block">
       <h2 class="text-xl font-bold mb-4">My Sites</h2>
@@ -39,8 +39,8 @@
     </div>
 
     <!-- Plants for selected site -->
-    <div class="plantsList-wrapper lg:w-10/12 mt-5 flex flex-col p-1">
-      <div class="plantsList-content overflow-scroll" v-if="selectedSite">
+    <div class="plantsList-wrapper h-[70vh] overflow-y-auto lg:w-10/12 mt-5 flex flex-col p-1">
+      <div class="plantsList-content" v-if="selectedSite">
         <h2 class="text-2xl mb-5 pl-5">Plants in {{ selectedSite.name }}</h2>
         <div class="myplant-card flex flex-wrap  gap-2 justify-center  " style="">
           <div class="myplant relative p-2 w-full md:w-1/2 lg:w-1/4" v-for="(plant) in plants" :key="plant.id" >
@@ -51,6 +51,7 @@
               }"
               :enter="{
                 opacity: 1,
+                
                 y: 0,
               }"
             >
@@ -77,35 +78,46 @@
           <div v-for="i in 4 - (plants.length % 4)" :key="`placeholder-${i}`" style=""></div>
         </div>
         <!-- Delete Confirmation Modal -->
-        <teleport to="body" v-if="isDeleteConfirmationOpen">
-          <transition
-            v-motion
-            :initial="{
-              backgroundColor: '$lightgray',
-              opacity: 0,
-              y: 0,
-            }"
-            :variants="{ custom: { scale: 2 } }"
-            :enter="{
-              backgroundColor: '$input',
-              opacity: 1,
-              y: 0,
-            }"
-          >
-            <div class="modal delete-confirmation-modal">
-              <div class="modal-content flex flex-col items-center">
-                <p class="pb-5 text-2xl">Are you sure you want to delete</p>
-                <img class="w-40 pt-3 pb-3" :src="selectedPlantToDelete.image_url" alt="">
-                <p class="plantName">{{ selectedPlantToDelete.common_name }}</p>
-                <p class="pb-5"> from your {{ selectedSite.name }}?</p>
-                <div class="confirmationButton-wrapper text-1xl flex gap-2">
-                  <button class="button w-40" @click="deletePlant">Yes</button>
-                  <button class="button w-40" @click="cancelDelete">No</button>
+        
+        <transition
+          v-if="isDeleteConfirmationOpen"
+          v-motion
+          :initial="{
+            backgroundColor: '$lightgray',
+            opacity: 0,
+            y: 0,
+          }"
+          :variants="{ custom: { scale: 2 } }"
+          :enter="{
+            backgroundColor: '$input',
+            duration: 0.5,
+            opacity: 1,
+            y: 0,
+          }"
+        >
+          <teleport to="body" v-if="isDeleteConfirmationOpen">
+              <div class="modal delete-confirmation-modal">
+                <div class="modal-content flex flex-col items-center">
+                  <p class="pb-5 text-2xl">Are you sure you want to delete</p>
+                  <img class="w-40 pt-3 pb-3" :src="selectedPlantToDelete.image_url" alt="">
+                  <p class="plantName">{{ selectedPlantToDelete.common_name }}</p>
+                  <p class="pb-5"> from your {{ selectedSite.name }}?</p>
+                  <div class="confirmationButton-wrapper text-1xl flex gap-2">
+                    <button class="buttonadmin __yes w-40" @click="deletePlant">
+                      <div class="buttonadmin__horizontal"></div>
+                      <div class="buttonadmin__vertical"></div>
+                        Yes
+                    </button>
+                    <button class="buttonadmin __no w-40" @click="cancelDelete">
+                      <div class="buttonadmin__horizontal"></div>
+                      <div class="buttonadmin__vertical"></div>
+                      No
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </transition>
-        </teleport>
+          </teleport>
+        </transition>
       </div>
     </div>
   </div>

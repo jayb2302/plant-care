@@ -33,10 +33,10 @@
               </li>
             </template>
           </ul>
-          <label for="myPlantName">My Plant Name:</label>
+          <label name="myPlantName">My Plant Name:</label>
             <input type="text" id="myPlantName"/>
           <div class=" flex flex-col ">
-            <label for="siteSelection">Select a Site:</label>
+            <label name="siteSelection">Select a Site:</label>
             <select class="select" id="siteSelection" v-model="selectedSite">
               <option value="">...</option>
               <option v-for="site in sites" :key="site.id" :value="site.id">{{ site.name }}</option>
@@ -46,7 +46,7 @@
           </div>
           <button class="button" @click="openAddSiteModal"> Create New Site</button>
           <div class="flex flex-col">
-            <label for="lastWateredDate">Last Watered:</label>
+            <label name="lastWateredDate">Last Watered:</label>
             <input type="date" id="lastWateredDate" v-model="lastWateredDate" />
           
           </div>

@@ -49,7 +49,7 @@
                     Submit
                 </button>
                 <router-link class="signin" 
-                    to="/signin">
+                    to="/signinmodal">
                     Log in
                 </router-link>
             </div>
@@ -58,39 +58,45 @@
 </template>
 
 <script setup>
-
-import { ref as refVue } from "vue"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { useRouter } from 'vue-router'
+import { ref as refVue } from 'vue';
+// Import necessary Firebase functions
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
-const username = refVue("")
-const email = refVue("")
-const password = refVue("")
-const router = useRouter()
+import router from '@/router';
 
-const signUp = () => {
-  createUserWithEmailAndPassword(getAuth(), email.value, password.value)
-    .then(() => {
-      console.log("Successfully registered!");
-      //Store the username in Firestore
-      addDoc(collection(getFirestore(), "users"), {
-        username: username.value,
-        email: email.value,
-      })
-        .then(() => {
-          console.log("Username and email saved in Firestore");
-          router.push('/signin');
-        })
-        .catch((error) => {
-          console.error("Error saving username and email in Firestore:", error);
-        });
-    })
-    .catch((error) => {
-      console.log(error.code);
-      alert(error.message);
+// Create references to the form fields
+const username = refVue('');
+const email = refVue('');
+const password = refVue('');
+
+// Get the router instance
+
+
+// Define the sign-up function
+const signUp = async () => {
+  const auth = getAuth(); // Get the authentication instance
+  const firestore = getFirestore(); // Get the Firestore instance
+
+  try {
+    // Create a new user with email and password
+    await createUserWithEmailAndPassword(auth, email.value, password.value);
+
+    // Save user data in Firestore
+    await addDoc(collection(firestore, 'users'), {
+      username: username.value,
+      email: email.value,
     });
+
+    console.log('Successfully registered!');
+    router.push('/signin'); // Redirect to the sign-in page
+  } catch (error) {
+    console.error('Error:', error);
+    alert(error.message); // Display the error message
+  }
 };
+
+
 
 </script>
 

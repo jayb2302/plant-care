@@ -19,7 +19,7 @@ const getPlantsData = async () => {
     plants.value = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
-      common_name: doc.data().common_name.length < 25 ? doc.data().common_name : doc.data().common_name.substring(0, 14) + '...'
+      common_name: doc.data().common_name.length < 25 ? doc.data().common_name : doc.data().common_name.substring(0, 18) + '...'
     }))
     fetchPlantsAndCalculateNextWateringDates();
   });

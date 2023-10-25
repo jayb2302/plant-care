@@ -19,11 +19,11 @@ const router = createRouter({
     
     {
       path: '/signup',
-      name: 'SignUp',
+      name: 'SignUpModal',
       // route level code-splitting
       // this generates a separate chunk (Schedule.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../components/SignUp.vue')
+      component: () => import('../components/SignUpModal.vue')
     },
 
     {
@@ -39,8 +39,8 @@ const router = createRouter({
     },
     {
       path: '/signin',
-      name: 'SignIn',
-      component: () => import('../components/SignIn.vue')
+      name: 'SignInModal',
+      component: () => import('../components/SignInModal.vue')
     },
     
     {

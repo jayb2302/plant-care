@@ -1,8 +1,6 @@
 .buttonadmin {
-	
 	--offset: 5px;
 	--border-size: 2px;
-	
 	display: block;
 	position: relative;
 	height: 3em;
@@ -91,11 +89,130 @@
 	}
   
 }
+.widgetsbtn {
+	--offset: 5px;
+	--border-size: 2px;
+	display: block;
+	height: 3em;
+    width: 10em;
+    padding: .2em 0em;
+	appearance: none;
+	border: 0;
+	background: $lightgray;
+	color: $darkbeige;   ;
+	text-transform: uppercase;
+	letter-spacing: .15em;
+	outline: none;
+	cursor: pointer;
+	font-weight: bold;
+	border-radius: 0;
+	box-shadow: inset 0 0 0 var(--border-size) currentcolor;
+	transition: background .8s ease;
+	&:hover {
+		background: rgba(136, 112, 112, 0.308);
+		border-radius: 7px;
+	}
+	&__horizontal,
+	&__vertical {
+		position: absolute;
+		top: var(--horizontal-offset, 0);
+		right: var(--vertical-offset, 0);
+		bottom: var(--horizontal-offset, 0);
+		left: var(--vertical-offset, 0);
+		transition: transform .8s ease;
+		will-change: transform;
+		
+		&::before {
+			content: '';
+			position: absolute;
+			border: inherit;
+      border-radius: 3px;
+		}
+	}
+	
+	&__horizontal {
+		--vertical-offset: calc(var(--offset) * -1);
+		border-top: var(--border-size) solid currentcolor;
+		border-bottom: var(--border-size) solid currentcolor;
+		
+		&::before {
+			top: calc(var(--vertical-offset) - var(--border-size));
+			bottom: calc(var(--vertical-offset) - var(--border-size));
+			left: calc(var(--vertical-offset) * -1);
+			right: calc(var(--vertical-offset) * -1);
+		}
+	}
+	
+	&:hover &__horizontal {
+		transform: scaleX(0);
+	}
+	
+	&__vertical {
+		--horizontal-offset: calc(var(--offset) * -1);
+		border-left: var(--border-size) solid currentcolor;
+		border-right: var(--border-size) solid currentcolor;
+		
+		&::before {
+			top: calc(var(--horizontal-offset) * -1);
+			bottom: calc(var(--horizontal-offset) * -1);
+			left: calc(var(--horizontal-offset) - var(--border-size));
+			right: calc(var(--horizontal-offset) - var(--border-size));
+		}
+	}
+	
+	&:hover &__vertical {
+		transform: scaleY(0);
+	}
+}
+.__yes{
+	background-color: transparentize($green, $amount: 0.8);
+	&:hover {
+		background-color: transparentize($green, $amount: 0.1);
+		transition: all;
+	}
+}
+.__no{
+	background-color: transparentize($red, $amount: 0.8);
+	&:hover {
+		background-color: transparentize($red, $amount: 0.1);
+		transition: all;
+	}
+	
+}
+
 
 .delete-btn {
 	background-color: $error;
 	color: $white;
 	padding: 0.3em 1em;
+}
+
+.close-btn{
+    transform: scalex(-1) scale(1.3) rotate(90deg);
+    position: absolute;
+    right: 5%;
+    top: 10%;
+    fill: $darkbeige;
+    &:hover{
+        transform: scaleX(-1) scale(1.5) ;
+        transition: all 0.5s ease-in-out;
+        fill: $red;
+    }
+}
+
+.add-btn{
+	transform: scalex(-1) scale(1.3); rotate: 45deg;;
+	position: absolute;
+	right: 5%;
+	top: 10%;
+	fill: $green;
+	filter: drop-shadow( -1px 2px 1px rgba(24, 26, 27, 0.693));
+
+	&:hover{
+		transform: scaleX(-1) scale(1.9);
+		transition: all 0.5s ease-in-out;
+		fill: $backhover;
+	}
 }
 
 .watering-button {
@@ -104,7 +221,27 @@
 	transition: background-color 0.3s, color 0.3s; /* Transition for color changes */
   }
   
-  .watering-button.clicked {
-	background-color: #34d399; /* New background color when clicked */
-	color: #000000; /* New text color when clicked */
-  }
+.watering-button.clicked {
+background-color: #34d399; /* New background color when clicked */
+color: #000000; /* New text color when clicked */
+}
+
+.user-btn{
+	filter: drop-shadow(2px 2px 2px rgba(175, 234, 38, 0.306)) drop-shadow(-2px -2px 2px rgba(175, 234, 38, 0.306));
+	background-color: $lightgray;
+	padding: .4em;
+	img {
+		transform: scale(0.8);
+	}
+	&:hover {
+		background-color: $white;
+		opacity: 0.8;
+		transform: matrix(1.1, 0, 0, 1.1, 2, 1.4) hue-rotate(10deg);
+		transition: all 0.5s ease-in-out;
+		img {
+			transform: scale(1);
+			transition: transform 0.5s ease-in-out;
+		}
+	}
+	
+}

@@ -19,7 +19,7 @@
   </main>
   <div class="btn-container  flex justify-center">
     <div class="btn-yes">
-      <button @click="showSignInModal">
+      <button @click="showSignInModalModal">
         <div class="icon-1">
           <svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 58.56 116.18" class="common-svg" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
             <defs></defs>
@@ -88,8 +88,8 @@
               <div class="leaf leaf5"></div>
               <div class="leaf leaf6"></div>
             </div>
-          <!-- Render SignIn.vue component here -->
-            <SignIn @close="closeModal" />
+          <!-- Render SignInModal.vue component here -->
+            <SignInModal  @close="closeModal" />
             <img id="leafImage" src="" alt="">
           </div>
         </div>
@@ -102,12 +102,12 @@
 
 <script setup>
 import {ref} from 'vue';
-import SignIn from '../components/SignIn.vue';
+import SignInModal from '@/components/SignInModal.vue';
 
 const showModal = ref(false); // This variable controls the modal visibility
 
 
-const showSignInModal = () => {
+const showSignInModalModal = () => {
   // Set a reactive variable to indicate that the modal should be shown
   showModal.value = true;
 };

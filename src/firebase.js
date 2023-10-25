@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-
+import { initializeApp } from 'firebase/app';
+import { getStorage } from 'firebase/storage';
+import { getFirestore } from 'firebase/firestore';
 //import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -12,6 +11,7 @@ import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyDZgJhl5K1IE2Kfr11cll3lOhIqEejJMVM",
   authDomain: "plant-care-63499.firebaseapp.com",
+  databaseURL: "https://plant-care-63499-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "plant-care-63499",
   storageBucket: "plant-care-63499.appspot.com",
   messagingSenderId: "362107105571",
@@ -24,4 +24,4 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const db = getFirestore(app); 
 
-export { storage, db };
+export { storage, db};

@@ -45,18 +45,7 @@ input{
 
 
 
-.close-btn{
-    transform: scalex(-1) scale(1.3);
-    position: absolute;
-    right: 5%;
-    top: 5%;
-    fill: $darkbeige;
-    &:hover{
-        transform: scaleX(-1) scale(1.9);
-        transition: all 0.5s ease-in-out;
-        fill: $backhover;
-    }
-}
+
 
 .cardbg {
     display: flex;
@@ -72,4 +61,58 @@ input{
     box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     padding: 1rem 1rem;
     background-color: $signinbg;
+}
+
+.notecard {
+    ::selection {
+        background:#222;
+        color:$yellow;
+      }
+      
+    
+      .paper {
+       height: 15vh;
+        line-height:1.5em;
+        background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.216) 1px, transparent 1px);
+        background-image: -moz-linear-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+        background-image: -ms-linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px);
+        background-size:100% 1.5em;
+        background-position:0 1.2em;
+        background-origin:content-box;
+        background-color:rgba($yellow,.5); 
+        padding:0.5em;
+        box-shadow:0px 0px 10px rgba(black,.3);
+      }
+}
+
+
+.red-background {
+    border: 6px double $red;
+    background-color: transparentize($red, $amount: 0.8);
+    animation: pulse infinite 1.5s ease-in-out;
+    }
+    
+.yellow-background {
+border: 6px double $yellow;
+background-color: transparentize($yellow, $amount: 0.8);
+animation: pulse forwards 2s ease-in-out;
+}
+
+.green-background {
+border: 6px double $green;
+background-color: transparentize($green, $amount: 0.8);
+
+}
+
+@keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+    
 }

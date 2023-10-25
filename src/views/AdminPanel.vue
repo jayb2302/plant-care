@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-screen">
     <div class="admin flex justify-end pr-5">
     
       <div class="search ">
@@ -10,10 +10,10 @@
   <!-- User Profile Dropdown -->
       <div class="ml-4 flex items-center md:ml-6">
           <div>
-              <button class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" @click="toggleDropdown">
+              <button class="user-btn relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" @click="toggleDropdown">
                   <span class="absolute -inset-1.5" />
                   <span class="sr-only">Open user menu</span>
-                  <img class="h-8 w-8 rounded-full" src="" alt="" />
+                  <img class="h-14 w-14 rounded-full bg-none  " src="../components/icons/userking.svg" alt="" />
               </button>
           </div>
           <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
@@ -28,13 +28,13 @@
       <div class="header-container mx-auto  flex justify-between max-w-7xl px-1 py-6 sm:px-6 lg:px-2">
         <h1 class="adminh1">My Schedule</h1>
         <div class="btn-wrapper gap-10 flex">
-          <button class="buttonadmin" @click="showAddPlantModal = true">
+          <button class="buttonadmin z-10" @click="showAddPlantModal = true">
             <img class="leaf" src="../assets/img/twoleaves.svg" style="width: 40px; height: 40px;" alt="Two leaf icon" />
             Add Plant
             <div class="buttonadmin__horizontal"></div>
             <div class="buttonadmin__vertical"></div>
           </button>
-          <button class="buttonadmin"  @click="showAddSiteModal = true">
+          <button class="buttonadmin z-10"  @click="showAddSiteModal = true">
             Add Site
             <div class="buttonadmin__horizontal"></div>
             <div class="buttonadmin__vertical"></div>
@@ -83,10 +83,10 @@
     </header>
     <TabGroup class="tabgroup" as="navbar" v-model:selected="selectedTab" v-if="isLoggedIn">
         <TabList class="flex space-x-4 justify-start ">
-          <Tab class="cursor-pointer">
+          <Tab  class="cursor-pointer" :class="{ 'active': isMyScheduleTabActive }">
             <h2>My Schedule</h2>
           </Tab>
-          <Tab class="cursor-pointer">
+          <Tab  class="cursor-pointer" :class="{ 'active': isMySitesTabActive }">
             <h2>My Sites</h2> 
           </Tab>
       
@@ -132,7 +132,7 @@
                 <div class="leaf leaf6"></div>
                 </div>
             <!-- Render SignIn.vue component here -->
-                <SignIn @close="closeModal" />
+                <SignInModal @close="closeModal" />
                 <img id="leafImage" src="" alt="">
             </div>
             </div>
@@ -142,16 +142,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { users, getUsersData } from '../modules/users';
 import { watch } from 'vue';
 import Schedule from './ScheduleView.vue';
-import MySitesView from './MySitesView.vue';
-import SignIn from '../components/SignIn.vue';
-import AddPlantModal from '@/components/AddPlantModal.vue';
-import AddSiteModal from '@/components/AddSiteModal.vue';
+import MySitesView from '../views/MySitesView.vue';
+import AddPlantModal from '../components/AddPlantModal.vue';
+import AddSiteModal from '../components/AddSiteModal.vue';
+import SignInModal from '../components/SignInModal.vue';
+
+
+
+
 
 const selectedTab = ref(0);
 const isLoggedIn = ref(false);
@@ -160,6 +164,19 @@ const isDropdownOpen = ref(false);
 const showModal = ref(false); // This variable controls the modal visibility
 const showAddPlantModal = ref(false);
 const showAddSiteModal = ref(false);
+
+const activeTab = ref('my-schedule');
+
+
+
+
+const isMyScheduleTabActive = computed(() => {
+  return activeTab.value === 'my-schedule';
+});
+
+const isMySitesTabActive = computed(() => {
+  return activeTab.value === 'my-sites';
+});
 
 const showSignInModal = () => {
   showModal.value = true;
