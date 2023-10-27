@@ -88,7 +88,7 @@
                     // If the router is already at /adminpanel, close the modal
                     closeModal()
                 } else {
-                    router.push('/signin');
+                    router.push('/admingpanel');
                 }
                 
                
