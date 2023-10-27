@@ -9,7 +9,7 @@
         <nav class="relative ">
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/signin">SignIn</RouterLink>
-          <RouterLink to="/adminpanel">About</RouterLink>
+          <RouterLink to="/adminpanel">Admin</RouterLink>
           
           
         </nav>
