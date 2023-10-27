@@ -11,9 +11,7 @@
           <RouterLink to="/signin">SignIn</RouterLink>
           <RouterLink to="/adminpanel">About</RouterLink>
           
-          <DarkModeSwitch />
           
-         
         </nav>
       </div>
     </header>
