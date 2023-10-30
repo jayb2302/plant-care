@@ -1,19 +1,17 @@
 
 
 <template>
-    <div id="app" class="logIn-wrapper  
-         "> 
+    <div class="signInSignUp-wrapper items-center m-atuo flex justify-center"> 
         <button class="pt-4 pr-4" @click="$emit('close')">
             <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
                 <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
             </svg>
         </button>
-        <div class="logIn-container  flex  
-           ">
-            <div class="card  flex gap-5 flex-col 
+        <div class="signInSignUp-container flex  ">
+            <div class="card  flex  gap-5 flex-col 
                  ">
                
-                 <h1 class="text-2xl font-semibold mb-5">Create New Account</h1>
+                 <h1 class="text-2xl font-semibold mb-3 mt-5">Create New Account</h1>
                 <div class="userName">
                     <label for="userName" class="block text-gray-600">Username</label>
                     <input
@@ -49,7 +47,7 @@
                     Submit
                 </button>
                 <router-link class="signin" 
-                    to="/signinmodal">
+                    to="/signin">
                     Log in
                 </router-link>
             </div>

@@ -1,16 +1,16 @@
 <template>
-  <div class="h-screen">
-    <div class="admin flex justify-end pr-5">
-    
-      <div class="search ">
-          <input name="searchbar" type="text" class="search__input w-80" placeholder="Search Your Plant Home">
+  <div v-if="isLoggedIn" class="">
+    <div class="admin w-full lg:flex flex  justify-end pr-5">
+    <!--  // --- UserProfile --- // -->
+      <!-- <div class="search ">
+          <input name="searchbar" type="text" class="search__input " placeholder="Search...">
           <button class="search__button bg-black">
           </button>
-      </div>
-  <!-- User Profile Dropdown -->
-      <div class="ml-4 flex items-center md:ml-6">
-          <div>
-              <button class="user-btn relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" @click="toggleDropdown">
+      </div> -->
+      <!--  // --- UserProfile --- // -->
+      <div class="admin-profile">
+          <div class=" ">
+              <button class="user-btn relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" @click="toggleDropdown">
                   <span class="absolute -inset-1.5" />
                   <span class="sr-only">Open user menu</span>
                   <img class="h-14 w-14 rounded-full bg-none  " src="../components/icons/userking.svg" alt="" />
@@ -24,12 +24,12 @@
           </transition>
       </div>
     </div>
-    <header class="shadow">
-      <div class="header-container mx-auto  flex justify-between max-w-7xl px-1 py-6 sm:px-6 lg:px-2">
-        <h1 class="adminh1">My Schedule</h1>
-        <div class="btn-wrapper gap-10 flex">
+    <header class="shadow m-0">
+      <div class="header-container lg:mb-3  lg:flex lg:justify-between max-w-6xl  pt-5  lg:px-2">
+        <div class="btn-wrapper flex  lg:gap-5  gap-2   justify-evenly">
+    
           <button class="buttonadmin z-10" @click="showAddPlantModal = true">
-            <img class="leaf" src="../assets/img/twoleaves.svg" style="width: 40px; height: 40px;" alt="Two leaf icon" />
+            <img class="leaf" src="../assets/img/twoleaves.svg" style=" height: 40px;" alt="Two leaf icon" />
             Add Plant
             <div class="buttonadmin__horizontal"></div>
             <div class="buttonadmin__vertical"></div>
@@ -81,9 +81,9 @@
           </Teleport>
       </div>
     </header>
-    <TabGroup class="tabgroup" as="navbar" v-model:selected="selectedTab" v-if="isLoggedIn">
-        <TabList class="flex space-x-4 justify-start ">
-          <Tab  class="cursor-pointer" :class="{ 'active': isMyScheduleTabActive }">
+    <TabGroup class="tabgroup" as="navbar" v-model="activeTab" v-if="isLoggedIn">
+        <TabList class="flex space-x-4 justify-center lg:justify-start  ">
+          <Tab  class="cursor-pointer pl-5 pr-5" :class="{ 'active': isMyScheduleTabActive }">
             <h2>My Schedule</h2>
           </Tab>
           <Tab  class="cursor-pointer" :class="{ 'active': isMySitesTabActive }">
@@ -92,21 +92,20 @@
       
       </TabList>
   
-      <TabPanels>
-          <TabPanel>
-              <Schedule/>
-          </TabPanel>
-          <TabPanel>
-              <MySitesView/>
-          </TabPanel>
-      </TabPanels>
-  </TabGroup>
+        <TabPanels>
+            <TabPanel>
+                <Schedule/>
+            </TabPanel>
+            <TabPanel>
+                <MySitesView/>
+            </TabPanel>
+        </TabPanels>
+    </TabGroup>
         <div v-else class="w-screen flex-col justify-center">
             <p class="p-tag text-center">Please log in to access this page.</p>
             <button id="btn-in" class="w-screen" @click="showSignInModal">Log In</button>
                 
         </div>
-    </div>
     <Teleport to="body">
         <transition 
             v-motion
@@ -139,6 +138,7 @@
         
         </transition>
     </Teleport>
+    </div>
 </template>
 
 <script setup>
@@ -157,7 +157,7 @@ import SignInModal from '../components/SignInModal.vue';
 
 
 
-const selectedTab = ref(0);
+
 const isLoggedIn = ref(false);
 
 const isDropdownOpen = ref(false);
@@ -167,15 +167,12 @@ const showAddSiteModal = ref(false);
 
 const activeTab = ref('my-schedule');
 
-
-
-
 const isMyScheduleTabActive = computed(() => {
   return activeTab.value === 'my-schedule';
 });
 
 const isMySitesTabActive = computed(() => {
-  return activeTab.value === 'my-sites';
+  return activeTab.value === 'mysites';
 });
 
 const showSignInModal = () => {
@@ -255,7 +252,12 @@ watch(isLoggedIn, (newIsLoggedIn) => {
     }
     h2 {
         font-family: $title-font;
-        font-size: 1.3rem;
+        font-size: 1.1rem;
+      }
+    .active {
+        border-bottom: 2px solid #000;
+        background-color: $focus;
+        color: #000;
       }
     
 </style>

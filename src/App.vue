@@ -1,7 +1,7 @@
 
 
 <template> 
-  <div class="main ">
+  <div id="app" class="main w-screen ">
     
     <header>
       <div class="wrapper">
@@ -37,7 +37,7 @@ header {
 
 
 nav {
-  width: 100%;
+  width: 100;
   font-size: 12px;
   text-align: center;
   position: relative;

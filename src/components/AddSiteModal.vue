@@ -1,25 +1,25 @@
 <template>
-    <div class="modal " @click="closeModal">
+    <div class="modal mt-1 " @click="closeModal">
       <!-- Modal content -->
-      <div class="modal-content flex flex-col  " @click.stop>
+      <div class="modal-content pt-2 flex flex-col  " @click.stop>
         <h2 class="h2 text-3xl text-center">Select a Site</h2>
             <button class=" w-40" @click="$emit('close')">
                 <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
                     <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
                 </svg>
             </button>
-        <div class="site-list flex wrap gap-5 pt-3 pb-3">
+        <div class="site-list w-4/4 flex flex-row flex-wrap  ">
           <!-- Render the list of sites with thumbnails and headings -->
             <div
-                class="site-card flex flex-col m-1 border-2 border-gray-200"
+                class="site-card w-2/4 p-1 flex lg:flex-col lg:m-1 "
                 v-for="site in sites"
                 :key="site.id"
                 @click="selectSite(site)"
                 :class="{ selected: site === selectedSite }"
             >
-                <div class="flex  relative flex-col justify-center items-center gap-3 ">
+                <div class="flex flex-grow relative justify-center items-center ">
                     <img class="" :src="site.thumbnail" alt="Site Thumbnail" />
-                    <h3 class="p-0 absolute">{{ site.name }}</h3>
+                    <h3 class="p-0 absolute text-clip">{{ site.name }}</h3>
                 </div>
             </div>
         </div>
@@ -36,17 +36,17 @@
             <div class="modal-content flex flex-col ">
                
                
-                <div class="div flex justify-center ">
+                <div class="flex justify-center ">
                 
-                    <h2 class="h2">Select Light Condition</h2>
+                    <h2 class="h2 mb-3">Select Light Condition</h2>
                 </div>
                     
-                <div class="light-content flex justify-evenly">
                  <button class="" @click="$emit('close')">
                         <svg class="back-btn" xmlns="http://www.w3.org/2000/svg" width="24.703" height="24.928">
                             <path d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z"/>
                         </svg> 
                     </button>
+                <div class="light-content flex  justify-evenly">
                     <button class="light-btn flex flex-col items-center" @click="setLightCondition('Full-shade')" :class="{ selected: selectedButton === 'Full-shade' }">
                         <img src="../components/icons/fullShade.svg" style="width: 60px; height: 60px;" alt="Full shade icons">
                         Full-shade
@@ -178,52 +178,37 @@ const confirmLightCondition = () => {
   /* Add styling for the modal and its content */
 .modal {
     width: 100%;  
-      
-    .light-content {
-        background-color: rgba(255, 255, 255, 0.748);
-        padding: 5% 0;
-        color: $heading-color;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        .light-btn {
-            
-            border: none;
-            &:hover {
-                cursor: pointer;
-                
-            }
-        }
-    }
-    .modal-content {   
+     .modal-content {   
         background-position-y: 50%;
         width: clamp(300px, 50%, 800px);
         .h2{
             color: $white;
             font-family: $heading-font;
             font-weight: 400;
-            font-size: 5rem;
             text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5), 0 0 1em rgba(0, 0, 0, 0.5);
         }
         .site-list{
-            margin-top: 2%;
-            flex-wrap: wrap;
+            
             justify-content: center;
             background-color: rgba(255, 255, 255, 0.395);
             padding: 2% 0;
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;            
             .site-card{
-                width: calc(100% / 6 - 1%);
-                background-color: $heading-color;
+                width: calc(100% / 6 - 80%);
+                background-color: $beige;
                 font-family: $title-font;
                 font-weight: 900;
                 letter-spacing: 2px;
-                font-size: 1.8em;
+                font-size: 1.5em;
                 color: $white;
                 box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
                
                 img {
-                    width: 350px;
-                    height: 130px;
-                    filter: opacity(0.6);
+                    width: 170px;
+                    height: 15vh;
+                    filter: opacity(0.8);
+                    
                     &:hover{
                         filter: opacity(1);
                         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;                        
@@ -234,11 +219,8 @@ const confirmLightCondition = () => {
                 }
                 h3{
                     bottom: 10%;
-                    width: max-content;
                     color: $white;
                     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5), 0 0 1em rgba(0, 0, 0, 0.5),  0 0 1em rgba(0, 0, 0, 0.5) , 0 0 1em rgba(0, 0, 0, 0.5);
-                   
-            
                 }
                 &:hover {
                     cursor: pointer;
@@ -248,12 +230,29 @@ const confirmLightCondition = () => {
             }
 
         }
+    } 
+    .light-content {
+        
+        padding: 0.5em  0;
+        color: $heading-color;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        .light-btn {
+            width: 110px;
+            
+            border: none;
+            &:hover {
+                cursor: pointer;
+                
+            }
+        }
     }
+    
     .back-btn{
     transform: scalex(-1) scale(1.3);
+    filter: drop-shadow(0 0 9px $focus);
     position: absolute;
-    left: 5%;
-    top: 25%;
+    top: 35%;
+    right: 5%;
     fill: $darkbeige;
     &:hover{
         transform: scaleX(-1) scale(1.9);
@@ -264,10 +263,13 @@ const confirmLightCondition = () => {
 }
 
   .selected {
-    border: 2px solid $darkPink;
-    background-color: $mutedPink;
+    border: 2px solid $green ;
+    background-color: $input;
     color: $heading-color; 
     font-weight: bold;
+    box-shadow:  $focus -2px -2px 30px, inset $focus 2px 2px 30px;
+    text-overflow: clip;
+    transition: all 0.5s ease-in;
     
     }
  
