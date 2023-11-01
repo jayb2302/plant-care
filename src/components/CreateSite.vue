@@ -1,3 +1,7 @@
+<template>
+  <div></div>
+</template>
+<script></script>
 <!-- <template>
   <div>
     <h2>Create a New Site</h2>
