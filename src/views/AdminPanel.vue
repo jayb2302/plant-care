@@ -1,183 +1,171 @@
 <template>
   <div v-if="isLoggedIn" class="">
-    <div class="admin w-full lg:flex flex  justify-end pr-5">
-    <!--  // --- UserProfile --- // -->
+    <div class="admin w-full  flex  justify-evenly">
+      <!--  // --- UserSearch --- // -->
       <!-- <div class="search ">
           <input name="searchbar" type="text" class="search__input " placeholder="Search...">
           <button class="search__button bg-black">
           </button>
       </div> -->
-      <!--  // --- UserProfile --- // -->
-      <div class="admin-profile">
-          <div class=" ">
-              <button class="user-btn relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" @click="toggleDropdown">
-                  <span class="absolute -inset-1.5" />
-                  <span class="sr-only">Open user menu</span>
-                  <img class="h-14 w-14 rounded-full bg-none  " src="../components/icons/userking.svg" alt="" />
-              </button>
-          </div>
-          <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-              <ul v-if="isDropdownOpen" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" @click.stop>
-              <p>{{ users.length > 0 ? users[0].username : 'Loading...' }}</p>
-              <li @click="handleSignOut">Sign Out</li>
-              </ul>
-          </transition>
-      </div>
-    </div>
-    <header class="shadow m-0">
-      <div class="header-container lg:mb-3  lg:flex lg:justify-between max-w-6xl  pt-5  lg:px-2">
-        <div class="btn-wrapper flex  lg:gap-5  gap-2   justify-evenly">
-    
+        <div class="flex-col md:flex-row flex gap-5 md:pt-5">
           <button class="buttonadmin z-10" @click="showAddPlantModal = true">
             <img class="leaf" src="../assets/img/twoleaves.svg" style=" height: 40px;" alt="Two leaf icon" />
             Add Plant
             <div class="buttonadmin__horizontal"></div>
             <div class="buttonadmin__vertical"></div>
           </button>
-          <button class="buttonadmin z-10"  @click="showAddSiteModal = true">
+          <button class="buttonadmin z-10" @click="showAddSiteModal = true">
+            <img class="siteicon" src="../components/icons/plantRoom.svg" style=" height: 40px;" alt="One leaf icon" />
             Add Site
             <div class="buttonadmin__horizontal"></div>
             <div class="buttonadmin__vertical"></div>
           </button>
         </div>
+      <!--  // --- UserProfile --- // -->
+      <div class="user-profile absolute right-5 top-7 md:top-3">
+        <div class=" ">
+          <button
+            class="user-btn relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            @click="toggleDropdown">
+            <span class="absolute -inset-1.5" />
+            <span class="sr-only">Open user menu</span>
+            <img class="h-14 w-14 rounded-full bg-none  " src="../components/icons/userking.svg" alt="" />
+          </button>
+        </div>
+        <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95"
+          enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
+          leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+          <ul v-if="isDropdownOpen"
+            class="absolute right-5 z-10 mt-2 w-48 origin-top-right rounded-md cardbg py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            @click.stop>
+            <p> Hello {{ currentUser && currentUser.username ? currentUser.username : 'Loading...' }}</p>
+
+            <li @click="handleSignOut">Sign Out</li>
+          </ul>
+        </transition>
+      </div>
+    </div>
+
+    <header class="shadow m-0 ">
+      <div class="header-container lg:mb-3  lg:flex lg:justify-between   pt-1 ">
       </div>
       <div id="modal-container">
-          <Teleport to="body">
-            <div class="modal-background dark:bg-slate-500">
-              <transition
-                v-motion
-                :initial="{
-                  opacity: 0,
-                  y: 0,
-                }"
-                :variants="{ custom: { scale: 2 } }"
-                :enter="{
-                  opacity: 1,
-                  y: 0,
-                }"
-              >
-                <AddPlantModal @close="handleModalClose" class="two" v-if="showAddPlantModal" />
-              </transition>
-            </div>
-          </Teleport>
+        <Teleport to="body">
+          <div class="modal-backgroun">
+            <transition v-motion 
+            :initial="{ opacity: 0, y: 0, }" 
+            :variants="{ custom: { scale: 2 } }" 
+            :enter="{opacity: 1,y: 0, }">
+              <AddPlantModal :userId="userUid" @close="handleModalClose" class="two" v-if="showAddPlantModal" />
+            </transition>
+          </div>
+        </Teleport>
 
-          <Teleport to="body">
-            <div class="modal-background">
-              <transition
-                v-motion
-                :initial="{
-                  opacity: 0,
-                  y: 0,
-                }"
-                :variants="{ custom: { scale: 2 } }"
-                :enter="{
-                  opacity: 1,
-                  y: 0,
-                }"
-              >
-                <AddSiteModal :onConfirm="handleConfirm" @close="handleModalClose" class="two bg-slate-400" v-if="showAddSiteModal" />
-              </transition>
-            </div>
-          </Teleport>
+        <Teleport to="body">
+          <div class="modal-background">
+            <transition v-motion :initial="{ opacity: 0, y: 0, }" 
+              :variants="{ custom: { scale: 2 } }" 
+              :enter="{ opacity: 1, y: 0, }">
+                <AddSiteModal 
+                  :onConfirm="handleConfirm" 
+                  @close="handleModalClose" 
+                  class="two"
+                  v-if="showAddSiteModal" />
+            </transition>
+          </div>
+        </Teleport>
       </div>
     </header>
-    <TabGroup class="tabgroup" as="navbar" v-model="activeTab" v-if="isLoggedIn">
-        <TabList class="flex space-x-4 justify-center lg:justify-start  ">
-          <Tab  class="cursor-pointer pl-5 pr-5" :class="{ 'active': isMyScheduleTabActive }">
-            <h2>My Schedule</h2>
-          </Tab>
-          <Tab  class="cursor-pointer" :class="{ 'active': isMySitesTabActive }">
-            <h2>My Sites</h2> 
-          </Tab>
-      
+    <TabGroup class="tabgroup" as="navbar" v-if="isLoggedIn">
+      <TabList class="flex space-x-4 justify-center lg:justify-start">
+        <Tab class="cursor-pointer pl-5 pr-5" v-slot="{ selected }">
+        <h2 :class="{ 'bg-blue-500 text-white': selected, 'bg-white text-black': !selected }" >
+          My Schedule
+        </h2>
+      </Tab>
+      <Tab class="cursor-pointer pl-5 pr-5"  v-slot="{ selected }">
+        <h2 :class="{ 'bg-blue-500 text-white': selected, 'bg-white text-black': !selected }">
+          My Sites
+        </h2>
+      </Tab>
+        <!-- <Tab class="cursor-pointer pl-5 pr-5"  v-slot="{ selected }">
+          <h2>My Schedule</h2>
+        </Tab>
+        <Tab class="cursor-pointer" :class="{ 'active': activeTab === 'sites' }">
+          <h2>My Sites</h2>
+        </Tab> -->
       </TabList>
-  
-        <TabPanels>
-            <TabPanel>
-                <Schedule/>
-            </TabPanel>
-            <TabPanel>
-                <MySitesView/>
-            </TabPanel>
-        </TabPanels>
+
+      <TabPanels>
+        <TabPanel>
+          <Schedule />
+        </TabPanel>
+        <TabPanel>
+          <MySitesView />
+        </TabPanel>
+      </TabPanels>
     </TabGroup>
-        <div v-else class="w-screen flex-col justify-center">
-            <p class="p-tag text-center">Please log in to access this page.</p>
-            <button id="btn-in" class="w-screen" @click="showSignInModal">Log In</button>
-                
-        </div>
+
+
+    <div v-else class="flex-col  justify-center">
+      <p class="p-tag text-center">Please log in to access this page.</p>
+      <button id="btn-in" class="w-screen" @click="showSignInModal">Log In</button>
+
     <Teleport to="body">
-        <transition 
-            v-motion
-            :initial="{
-            opacity: 0,
-            y: 0,
-            }"
-            :variants="{ custom: { scale: 3 } }"
-            :enter="{
-            opacity: 1,
-            y: 0,
-            }" 
-            
-        >
-            <div class="modal" v-if="showModal">
-            <div id="modal" class="modal-content"> 
-                <div id="background" class="background">
-                <div class="leaf leaf1"></div>
-                <div class="leaf leaf2"></div>
-                <div class="leaf leaf3"></div>
-                <div class="leaf leaf4"></div>
-                <div class="leaf leaf5"></div>
-                <div class="leaf leaf6"></div>
-                </div>
+      <transition v-motion :initial="{
+              opacity: 0,
+              y: 0,
+            }" :variants="{ custom: { scale: 3 } }" :enter="{
+        opacity: 1,
+        y: 0,
+      }">
+        <div class="modal" v-if="showModal">
+          <div id="modal" class="modal-content">
+            <div id="background" class="background">
+              <div class="leaf leaf1"></div>
+              <div class="leaf leaf2"></div>
+              <div class="leaf leaf3"></div>
+              <div class="leaf leaf4"></div>
+              <div class="leaf leaf5"></div>
+              <div class="leaf leaf6"></div>
+            </div>
             <!-- Render SignIn.vue component here -->
-                <SignInModal @close="closeModal" />
-                <img id="leafImage" src="" alt="">
-            </div>
-            </div>
-        
-        </transition>
+            <SignInModal @close="closeModal" />
+            <img id="leafImage" src="" alt="">
+          </div>
+        </div>
+
+      </transition>
     </Teleport>
     </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
-import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
-import { users, getUsersData } from '../modules/users';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getCurrentUser } from '../auth.js';
+import { getUsersData } from '../modules/users';
 import { watch } from 'vue';
+import router from '../router';
 import Schedule from './ScheduleView.vue';
 import MySitesView from '../views/MySitesView.vue';
 import AddPlantModal from '../components/AddPlantModal.vue';
 import AddSiteModal from '../components/AddSiteModal.vue';
 import SignInModal from '../components/SignInModal.vue';
 
+const { userUid } = getAuth();
 
-
-
-
-
+const userId = ref(null);
 const isLoggedIn = ref(false);
-
 const isDropdownOpen = ref(false);
-const showModal = ref(false); // This variable controls the modal visibility
+const showModal = ref(false);
 const showAddPlantModal = ref(false);
 const showAddSiteModal = ref(false);
+const currentUser = ref(null);
 
-const activeTab = ref('my-schedule');
-
-const isMyScheduleTabActive = computed(() => {
-  return activeTab.value === 'my-schedule';
-});
-
-const isMySitesTabActive = computed(() => {
-  return activeTab.value === 'mysites';
-});
-
-const showSignInModal = () => {
-  showModal.value = true;
-};
+const auth = getAuth();
 
 const closeModal = () => {
   showModal.value = false;
@@ -192,7 +180,6 @@ const handleModalClose = () => {
   showAddSiteModal.value = false;
 };
 
-
 const toggleDropdown = (event) => {
   event.stopPropagation();
   isDropdownOpen.value = !isDropdownOpen.value;
@@ -203,10 +190,10 @@ const handleSignOut = () => {
     .then(() => {
       console.log('Signed out successfully');
       isLoggedIn.value = false;
-      
+      router.push('/');
     })
     .catch((error) => {
-      console.log(error.code);
+      console.error('Sign-out error:', error);
     });
 };
 
@@ -216,24 +203,35 @@ const closeDropdown = (event) => {
   }
 };
 
-let auth;
-onMounted(async () => {
-  auth = getAuth();
+onUnmounted(() => {
+  document.removeEventListener("click", closeDropdown);
+});
 
+onMounted(async () => {
+  try {
+    // Fetch user data
+    const user = await getCurrentUser();
+    userId.value = user.uid;
+    const userData = await getUsersData(userId.value);
+    currentUser.value = userData;
+  } catch (error) {
+    // Handle the error as needed, e.g., log it or show an error message.
+    console.error("Error while fetching user data:", error);
+  }
+
+  // Observe the authentication state
   onAuthStateChanged(auth, (user) => {
     isLoggedIn.value = !!user;
 
-    // Call getUsersData to retrieve user data when needed
     if (user) {
-      getUsersData();
+      userId.value = user.uid;
+      getUsersData(user.uid).then((userData) => {
+        currentUser.value = userData;
+      });
     }
   });
 
   document.addEventListener("click", closeDropdown);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", closeDropdown);
 });
 
 watch(isLoggedIn, (newIsLoggedIn) => {
@@ -246,18 +244,22 @@ watch(isLoggedIn, (newIsLoggedIn) => {
 
 
 
+
+
+
 <style lang="scss" scoped>
-    nav{
-        visibility: hidden;
-    }
-    h2 {
-        font-family: $title-font;
-        font-size: 1.1rem;
-      }
-    .active {
-        border-bottom: 2px solid #000;
-        background-color: $focus;
-        color: #000;
-      }
-    
+nav {
+  visibility: hidden;
+}
+
+h2 {
+  font-family: $title-font;
+  font-size: 1.1rem;
+}
+
+.active {
+  border-bottom: 2px solid #000;
+  background-color: $focus;
+  color: #000;
+}
 </style>

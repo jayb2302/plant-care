@@ -69,10 +69,22 @@ $heading-size: 5rem;
         margin-left: 0.5rem;
     }
 }
-.error-message{
+.error-message {
     color: $red;
     text-shadow: 1px 1px 1px $black;
     letter-spacing: 1px;
-
-}
+    animation: blink 2s infinite; /* Adjust the duration as needed */
+  }
+  
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 

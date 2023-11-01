@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <h2>Create a New Site</h2>
     <form @submit.prevent="createSite">
@@ -45,7 +45,7 @@
       <button type="submit" class="btn btn-primary">Create Site</button>
     </form>
   </div>
-</template>
+</template> 
 
 <script>
 // import { ref } from 'vue';
@@ -95,3 +95,4 @@ export default {
 <style>
 /* Add your CSS styling here */
 </style>
+-->

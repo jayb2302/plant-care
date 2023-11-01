@@ -11,7 +11,7 @@ const plantDataRef = collection(db, 'plants');
 const pastWateringPlants = ref([]);
 const plantsToWaterToday = ref([]);
 const plantsToWaterTomorrow = ref([]);
-const plantCareTips = ref([]);
+
 
 const getPlantsData = async () => {
   await onSnapshot(plantDataRef, (snapshot) => {
@@ -54,16 +54,6 @@ const fetchPlantsAndCalculateNextWateringDates = async () => {
 
 };
 
- // Populate plantCareTips
- plantCareTips.value = [
-  "Water your plants on a consistent schedule.",
-  "Provide adequate sunlight for each plant's needs.",
-  "Fertilize your plants regularly but not excessively.",
-  "Prune and trim your plants when necessary.",
-];
-
-
-
 const addPlant = async (newPlantData) => {
   try {
     await addDoc(collection(db, 'plants'), newPlantData);
@@ -82,4 +72,4 @@ const deletePlant = async (id) => {
   }
 };
 
-export { plants, getPlantsData, addPlant, deletePlant, pastWateringPlants, plantsToWaterToday, plantsToWaterTomorrow, plantCareTips };
+export { plants, getPlantsData, addPlant, deletePlant, pastWateringPlants, plantsToWaterToday, plantsToWaterTomorrow };

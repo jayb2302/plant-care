@@ -1,20 +1,12 @@
 
 
 <template> 
-  <div id="app" class="main w-screen ">
-    
-    <header>
-      <div class="wrapper">
-        
+  <div id="app" class="w-screen ">
         <nav class="relative ">
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/signin">SignIn</RouterLink>
           <RouterLink to="/adminpanel">Admin</RouterLink>
-          
-          
         </nav>
-      </div>
-    </header>
   </div>
   <RouterView />
 </template>
@@ -56,7 +48,7 @@ nav a.router-link-exact-active:hover {
 nav a {
   display: inline-block;
   padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  border-left: 1px solid green;
 }
 
 nav a:first-of-type {

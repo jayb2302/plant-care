@@ -56,17 +56,17 @@
 </template>
 
 <script setup>
-import { ref as refVue } from 'vue';
+import { ref  } from 'vue';
 // Import necessary Firebase functions
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
-import router from '@/router';
+
 
 // Create references to the form fields
-const username = refVue('');
-const email = refVue('');
-const password = refVue('');
+const username = ref('');
+const email = ref('');
+const password = ref('');
 
 // Get the router instance
 
@@ -77,23 +77,23 @@ const signUp = async () => {
   const firestore = getFirestore(); // Get the Firestore instance
 
   try {
-    // Create a new user with email and password
-    await createUserWithEmailAndPassword(auth, email.value, password.value);
+  // Create a new user with email and password
+  await createUserWithEmailAndPassword(auth, email.value, password.value);
 
-    // Save user data in Firestore
-    await addDoc(collection(firestore, 'users'), {
-      username: username.value,
-      email: email.value,
-    });
+  // Save user data in Firestore
+  await addDoc(collection(firestore, 'users'), {
+    username: username.value,
+    email: email.value,
+    userId: auth.currentUser.uid,
+  });
 
-    console.log('Successfully registered!');
-    router.push('/signin'); // Redirect to the sign-in page
-  } catch (error) {
-    console.error('Error:', error);
-    alert(error.message); // Display the error message
-  }
+  console.log('Successfully registered!');
+} catch (error) {
+  console.error('Error during user registration:', error);
+  alert(error.message); // Display the error message
+}
+
 };
-
 
 
 </script>

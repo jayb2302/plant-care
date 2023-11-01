@@ -1,33 +1,29 @@
 <template>
-  <div class="lg:flex  w-full p-3    h-[70vh] ">
+  <div class="lg:flex  w-full p-3    h-[85vh] ">
     <!-- Sidebar for sites -->
-    <div class="sitesSidebar w-full  p-2 border-r absolute hidden md:block">
+    <div class="sitesSidebar w-full md:w-5/12 p-2 border-r absolute hidden md:block">
       <div class="   ">
         <div class="flex flex-col w-full flex-wrap ">
           <div
             v-for="site in sites"
             :key="site.id"
             @click="selectSite(site)"
-            class="cursor-pointer z-10  w-4/12 rb p-2 mb-2 flex flex-grow "
+            class="siteList cursor-pointer z-10  w-4/12 rb p-2 mb-2 flex flex-grow justify-between "
             :class="{ 'bg-gray-200': selectedSite && selectedSite.id === site.id }"
           >
             <h2 class="text-lg">{{ site.name }}</h2>
-          <button  @click="deleteSiteConfirmation(site)" class="flex">
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 32 32">
+          <button  @click="confirmSiteDelete(site)" class="">
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="35" height="40" viewBox="0 0 32 32">
               <path d="M 11 2 L 11 4 L 21 4 L 21 2 L 11 2 z M 4 6 L 4 8 L 28 8 L 28 6 L 4 6 z M 7.9921875 9.875 L 6.0078125 10.125 C 6.0078125 10.125 7 18.074074 7 27 L 7 28 L 25 28 L 25 27 C 25 18.074074 25.992188 10.125 25.992188 10.125 L 24.007812 9.875 C 24.007812 9.875 23.120303 17.398914 23.042969 26 L 8.9570312 26 C 8.8796974 17.398914 7.9921875 9.875 7.9921875 9.875 z M 12.986328 10.835938 L 11.013672 11.164062 C 11.013672 11.164062 12 17.111111 12 23 L 14 23 C 14 16.888889 12.986328 10.835936 12.986328 10.835938 z M 19.013672 10.835938 C 19.013672 10.835938 18 16.888889 18 23 L 20 23 C 20 17.111111 20.986328 11.164064 20.986328 11.164062 L 19.013672 10.835938 z"></path>
             </svg>
           </button>
-    </div>
-  </div>
-  
-
-
-    </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Toggle button for the sidebar (shown on small screens) -->
-
-  <div class="md:hidden w-2/12 p-1 border-r">
+    <div class="md:hidden w-2/12 p-1 border-r">
       <button @click="toggleSidebar" class="z-10 cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,19 +42,17 @@
       </button>
     </div>
 
-
     <!-- Plants for selected site -->
-    
     <div   v-if="selectedSite"
       v-motion="'fade'"
       :initial="{ opacity: 0 }"
       :enter="{ opacity: 1 }"
-      :leave="{ opacity: 0 }"  class="plantsList-wrapper absolute lg:w-9/12 bottom-10 lg:right-0 flex flex-col sm:w-full p-1">
+      :leave="{ opacity: 0 }"  class="plantsList-wrapper relative md:w-9/12 bottom-10 md:left-48  md:top-0 flex flex-col sm:w-full p-1">
      
       <div  class="plantsList-content flex flex-col h-[60vh] overflow-y-auto" v-if="selectedSite">
         <h2 class="text-2xl mb-5 pl-5">Plants in {{ selectedSite.name }}</h2>
         <div class="myplant-card flex m-2 flex-wrap gap-2 justify-center">
-          <div class="myplant relative p-2 w-full md:w-1/2 lg:w-1/4" v-for="(plant) in plants" :key="plant.id">
+          <div class="myplant relative p-2 w-full md:w-1/2 lg:w-1/4" v-for="(plant) in filteredPlants" :key="plant.id">
             <div v-motion
               :initial="{
                 opacity: 0,
@@ -94,7 +88,6 @@
         </div>
         <!-- Delete Confirmation Modal -->
         
-       
       </div>
     </div>
     
@@ -137,42 +130,148 @@
               </div>
           </teleport>
         </transition>
+        <transition
+    v-if="isSiteDeleteConfirmationOpen"
+    v-motion
+    :initial="{
+      backgroundColor: '$lightgray',
+      opacity: 0,
+      y: 0,
+    }"
+    :variants="{ custom: { scale: 1 } }"
+    :enter="{
+      backgroundColor: '$input',
+      duration: 0.5,
+      opacity: 1,
+      y: 0,
+    }"
+  >
+    <teleport to="body" v-if="isSiteDeleteConfirmationOpen">
+      <div class="modal delete-confirmation-modal">
+        <div class="modal-content flex flex-col items-center">
+          <p class="pb-5 text-2xl">Are you sure you want to delete</p>
+          <p class="siteName">{{ selectedSiteToDelete.name }}</p>
+          <p class="pb-5"> from your sites?</p>
+          <div class="confirmationButton-wrapper text-1xl flex gap-2">
+            <button class="buttonadmin __yes w-40" @click="deleteSiteConfirmation">
+              <div class="buttonadmin__horizontal"></div>
+              <div class="buttonadmin__vertical"></div>
+              Yes
+            </button>
+            <button class="buttonadmin __no w-40" @click="cancelSiteDelete">
+              <div class="buttonadmin__horizontal"></div>
+              <div class="buttonadmin__vertical"></div>
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </teleport>
+  </transition>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { db } from '../firebase.js';
-import { sites,  deleteSite } from '../modules/sites.js'; // Import the functions you need from sites.js
+import { sites } from '../modules/sites.js';
 import { plants } from '../modules/plants.js';
-import { collection, getDocs, doc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc, query, where, onSnapshot } from 'firebase/firestore';
+import { getCurrentUser } from '../auth';
 
 
 const selectedSite = ref(null);
+const user = ref(null);
+const selectedPlantToDelete = ref(null);
+const isDeleteConfirmationOpen = ref(false);
+const selectedSiteToDelete = ref(null);
+const isSiteDeleteConfirmationOpen = ref(false);
 
-const deleteSiteConfirmation = (site) => {
-  // Call the deleteSite function from your imported sites module
-  deleteSite(site);
+// Use Firebase Auth to ensure the user is authenticated before initializing
+
+const loadSites = async () => {
+  user.value = await getCurrentUser(); // Set the current user
+
+  if (user.value) {
+    const sitesCollection = collection(db, 'sites');
+    const sitesQuery = query(sitesCollection, where('userId', '==', user.value.uid));
+    onSnapshot(sitesQuery, (snapshot) => {
+      sites.value = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    });
+  }
 };
 
 
+const loadPlants = async () => {
+  // Fetch initial plants
+  if (user.value) {
+    const plantsCollection = collection(db, 'plants');
+    const plantsQuery = query(plantsCollection, where('userId', '==', user.value.uid));
+    const initialPlantsSnapshot = await getDocs(plantsQuery);
+    plants.value = initialPlantsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  // Listen for real-time updates to the plants collection
+  if (user.value) {
+    const plantsCollection = collection(db, 'plants');
+    const plantsQuery = query(plantsCollection, where('userId', '==', user.value.uid));
+
+    // This will update the local plants array whenever there's a change in the Firestore collection.
+    onSnapshot(plantsQuery, (snapshot) => {
+      plants.value = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    });
+  }
+};
+
+const selectSite = async (site) => {
+  selectedSite.value = site;
+
+  if (site) {
+    const plantsCollection = collection(db, 'plants');
+    const plantsQuery = query(plantsCollection, where('siteId', '==', site.id));
+    const plantsSnapshot = await getDocs(plantsQuery);
+    plants.value = plantsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+};
+
+const filteredPlants = computed(() => {
+  if (!selectedSite.value) {
+    return plants.value;
+  }
+  return plants.value.filter((plant) => plant.siteId === selectedSite.value.id);
+
+});
+
+const confirmSiteDelete = (site) => {
+  selectedSiteToDelete.value = site;
+  isSiteDeleteConfirmationOpen.value = true;
+};
+
+const cancelSiteDelete = () => {
+  selectedSiteToDelete.value = null;
+  isSiteDeleteConfirmationOpen.value = false;
+};
+
+const deleteSiteConfirmation = async () => {
+  if (selectedSiteToDelete.value) {
+    try {
+      const siteRef = collection(db, 'sites');
+      await deleteDoc(doc(siteRef, selectedSiteToDelete.value.id));
+      selectedSiteToDelete.value = null;
+      isSiteDeleteConfirmationOpen.value = false;
+    } catch (error) {
+      console.error('Error deleting site: ', error);
+    }
+  }
+};
 
 
 const toggleSidebar = () => {
   const sidebar = document.querySelector('.sitesSidebar');
   sidebar.classList.toggle('hidden');
 };
-const selectSite = async (site) => {
-  selectedSite.value = site;
-  // Load associated plants for the selected site without triggering deletions
-  const plantsCollection = collection(db, 'plants');
-  const plantsQuery = query(plantsCollection, where('siteId', '==', site.id));
-  const plantsSnapshot = await getDocs(plantsQuery);
-  plants.value = plantsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-};
 
-const selectedPlantToDelete = ref(null);
-const isDeleteConfirmationOpen = ref(false);
+
 
 const confirmDelete = (plant) => {
   selectedPlantToDelete.value = plant;
@@ -197,29 +296,32 @@ const deletePlant = async () => {
   }
 };
 
-
-
-
 onMounted(async () => {
-  const sitesCollection = collection(db, 'sites');
-  const sitesQuery = query(sitesCollection);
-  const sitesSnapshot = await getDocs(sitesQuery);
-  sites.value = sitesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  // Load sites
+  loadSites();
 
+  loadPlants();
 });
-
-
-
-
-
 </script>
+
 
 
 
 
 <style lang="scss" scoped>
 
-
+.siteList {
+  button {
+    display: none;
+    
+  } 
+  &:hover{
+    
+      button {
+        display: block;
+      }
+    }
+}
 .modal {
   padding: 10em 20em;
   
@@ -286,5 +388,7 @@ onMounted(async () => {
    }
   }
 }
+
+
 
 </style>

@@ -1,20 +1,19 @@
 
-
 <template>
   <main class="home-wrapper overflow-hidden">
     <div class="heading-container flex-col flex">
-      <div class="heading-bg absolute top-36">
+      <div class="heading-bg absolute top-40 ">
       </div>
-       <div class="lg:w-6/12 absolute top-48 left-12 lg:top-40 lg:left-0 ">
-        <svg class="textdo ">
-          <text class="" x="52%" y="50%" dy=".15em" text-anchor="middle">
+       <div class="lg:w-6/12 absolute top-48 pl-10 lg:top-40 lg:left-0 ">
+        <svg class="textdo  ">
+          <text class="" x="50%" y="50%" dy=".15em" text-anchor="middle">
             Do you
           </text>
         </svg>
       </div>
       
-      <h1 class="-mt-4 text-clip">Plant</h1>
-      <div class="lg:w-6/12 absolute bottom-48 right-12 lg:bottom-40 lg:right-0"> 
+      <h1 class="-mt-4 ">Plant</h1>
+      <div class="lg:w-6/12 absolute bottom-48 right-5 lg:bottom-40 lg:right-0"> 
         <svg class="">
           <text class="textcare" x="50%" y="40%" dy=".35em" text-anchor="middle">
             Care ?
@@ -23,7 +22,7 @@
       </div>
      
     </div>
-    <div class="btn-container absolute bottom-28 left-10 w-11/12 lg:bottom-40  flex items-center lg:justify-center">
+    <div class="btn-container absolute bottom-28  w-full lg:bottom-48  flex items-center lg:justify-center">
       <div class="btn-yes">
         <button @click="showSignInModalModal">
           <div class="icon-1">
@@ -113,7 +112,6 @@ import SignInModal from '@/components/SignInModal.vue';
 
 const showModal = ref(false); // This variable controls the modal visibility
 
-
 const showSignInModalModal = () => {
   // Set a reactive variable to indicate that the modal should be shown
   showModal.value = true;
@@ -129,7 +127,6 @@ const goToYoutube = () => {
   window.open('https://youtu.be/6HNoPB_cTwE?si=-eHfsw-ALItePszu', '_blank');
 };
 
-
 </script>
 
 <style lang="scss">
@@ -137,7 +134,6 @@ const goToYoutube = () => {
 nav {
   visibility: hidden;
 }
-
 
 .home-wrapper {
 
@@ -187,7 +183,7 @@ nav {
         z-index: 1;
         text-shadow: 2px 3px 3px rgba(0,0,0,0.3), 
         0px -7px 10px rgba(255,255,255,0.3,), -4px 2px 3px rgba(255,255,255,0.3);
-        font-size: 9em;
+        font-size: 7em;
         color: $heading-text;
         font-weight: 900;
       }

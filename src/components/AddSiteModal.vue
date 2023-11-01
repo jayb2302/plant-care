@@ -1,23 +1,23 @@
 <template>
     <div class="modal mt-1 " @click="closeModal">
       <!-- Modal content -->
-      <div class="modal-content pt-2 flex flex-col  " @click.stop>
+      <div class="modal-content pt-2 flex flex-col   " @click.stop>
         <h2 class="h2 text-3xl text-center">Select a Site</h2>
             <button class=" w-40" @click="$emit('close')">
                 <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
                     <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
                 </svg>
             </button>
-        <div class="site-list w-4/4 flex flex-row flex-wrap  ">
+        <div class="site-list w-4/4 lg:w-12/12  flex  flex-row flex-wrap   ">
           <!-- Render the list of sites with thumbnails and headings -->
             <div
-                class="site-card w-2/4 p-1 flex lg:flex-col lg:m-1 "
+                class="site-card w-2/4 lg:w-2/12 p-1  flex lg:flex-col lg:m-1 "
                 v-for="site in sites"
                 :key="site.id"
                 @click="selectSite(site)"
                 :class="{ selected: site === selectedSite }"
             >
-                <div class="flex flex-grow relative justify-center items-center ">
+                <div class="flex flex-grow  relative justify-center items-center ">
                     <img class="" :src="site.thumbnail" alt="Site Thumbnail" />
                     <h3 class="p-0 absolute text-clip">{{ site.name }}</h3>
                 </div>
@@ -82,9 +82,10 @@
 </template>
   
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase'; // Import your Firebase configuration
+import { db } from '../firebase'; 
+import { getCurrentUser } from '../auth';
 
 import officeThumbnail from '@/assets/img/office.jpeg';
 import bedroomThumbnail from '@/assets/img/bedroom.jpeg';
@@ -98,24 +99,23 @@ import gardenThumbnail from '@/assets/img/garden.jpeg';
 import livingroomThumbnail from '@/assets/img/livingroom.jpeg';
 
 const showLightConditionModal = ref(false);
-const lightCondition = ref(null);
+const lightCondition = ref('');
 const selectedSite = ref(null);
-
-
-const addSiteToFirestore = async (site) => {
-    try {
-        const sitesCollection = collection(db, 'sites'); // Replace 'sites' with your Firestore collection name
-        await addDoc(sitesCollection, { ...site, lightCondition: lightCondition.value });
-        console.log('Site added to Firestore');
-    } catch (error) {
-        console.error('Error adding site to Firestore:', error);
-    }
-};
-  
 
 const { onConfirm } = defineProps(['onConfirm']);
 
-// Premade list of sites with thumbnails
+onMounted(async () => {
+  const user = await getCurrentUser();
+  if (!user) {
+    console.error('User is not authenticated or user data is unavailable.');
+    return;
+  }
+  // User is authenticated, you can proceed with the user data
+
+  const setUser = user;
+  console.log('User:', setUser);
+});
+
 
 const sites = ref([
     { name: 'Foreroom', thumbnail: livingroomThumbnail },
@@ -152,10 +152,26 @@ const setLightCondition = (condition) => {
     lightCondition.value = condition;
 };
 
-const confirmLightCondition = () => {
+const addSiteToFirestore = async (site, user) => {
+  if (user) {
+    try {
+      const sitesCollection = collection(db, 'sites');
+      await addDoc(sitesCollection, { ...site, userId: user.uid, lightCondition: lightCondition.value });
+      console.log('Site added to Firestore');
+    } catch (error) {
+      console.error('Error adding site to Firestore:', error);
+    }
+  } else {
+    console.error('User is not authenticated or user data is unavailable.');
+  }
+};
+
+const confirmLightCondition = async () => {
   if (lightCondition.value) {
-    // Add the selected site with the selected light condition to Firestore
-    addSiteToFirestore(selectedSite.value);
+    // Get the user data
+    const user = await getCurrentUser();
+    // Pass user data to the function
+    addSiteToFirestore(selectedSite.value, user);
     // Emit the selected site to the parent component using the provided onConfirm prop
     onConfirm(selectedSite.value);
     // Close the light condition modal
@@ -164,15 +180,14 @@ const confirmLightCondition = () => {
   } else {
     alert('Please select a light condition before confirming.');
   }
-  
 };
 
-  const closeModal = () => {
-    // Optionally, you can close the modal when clicking outside of it
-    // You can add this functionality if needed
-  };
-  
-  </script>
+const closeModal = () => {
+  // Optionally, you can close the modal when clicking outside of it
+  // You can add this functionality if needed
+};
+</script>
+
   
 <style scoped lang="scss">
   /* Add styling for the modal and its content */
