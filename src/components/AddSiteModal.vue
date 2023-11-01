@@ -32,21 +32,19 @@
             </button>
         </div>
 
-        <div v-if="showLightConditionModal" class="modal">
-            <div class="modal-content flex flex-col ">
-               
-               
-                <div class="flex justify-center ">
-                
-                    <h2 class="h2 mb-3">Select Light Condition</h2>
-                </div>
-                    
-                 <button class="" @click="$emit('close')">
-                        <svg class="back-btn" xmlns="http://www.w3.org/2000/svg" width="24.703" height="24.928">
-                            <path d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z"/>
-                        </svg> 
-                    </button>
-                <div class="light-content flex  justify-evenly">
+        <div v-if="showLightConditionModal" class="modal ">
+          <div class="modal-content flex flex-col ">
+            <div class="flex justify-center flex-col items-center">
+                <h2 class="h2 mt-3">Light Condition</h2>
+                <p> in your site</p>
+            </div>      
+            <button class="" @click="$emit('close')">
+                  <svg class="back-btn" xmlns="http://www.w3.org/2000/svg" width="24.703" height="24.928">
+                      <path d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z"/>
+                  </svg> 
+            </button>
+              <div class="light-content py-5 flex items-center md:items-evenly flex-col ">
+                <div class="flex  md:justify-evenly">
                     <button class="light-btn flex flex-col items-center" @click="setLightCondition('Full-shade')" :class="{ selected: selectedButton === 'Full-shade' }">
                         <img src="../components/icons/fullShade.svg" style="width: 60px; height: 60px;" alt="Full shade icons">
                         Full-shade
@@ -55,27 +53,29 @@
                         <img src="../components/icons/partShade.svg" style="width: 60px; height: 60px;" alt="Part shade icon">
                         Part-shade
                     </button>
-                    <button class="light-btn flex flex-col items-center" @click="setLightCondition('Part-sun')" :class="{ selected: selectedButton === 'Part-sun' }">
-                        <img src="../components/icons/partSun.svg" style="width: 60px; height: 60px;" alt="Part sun icon">
-                        Part-sun
-                    </button>
-                    <button class="light-btn flex flex-col items-center" @click="setLightCondition('Full-sun')" :class="{ selected: selectedButton === 'Full-sun' }">
-                        <img src="../components/icons/fullSun.svg" style="width: 60px; height: 60px;" alt="Full sun icon">
-                        Full-sun
-                    </button>
-                </div> 
-               
-                <div class="flex justify-center items-center mt-5">
-                
-                    <button class="buttonadmin w-40"  @click="confirmLightCondition">
-                        Confirm
-                        <div class="buttonadmin__horizontal"></div>
-                        <div class="buttonadmin__vertical"></div>
-                    </button>
-                
                 </div>
-               
-            </div>
+              <div class="flex justify-center md:justify-evenly">
+                  <button class="light-btn flex flex-col items-center" @click="setLightCondition('Part-sun')" :class="{ selected: selectedButton === 'Part-sun' }">
+                      <img src="../components/icons/partSun.svg" style="width: 60px; height: 60px;" alt="Part sun icon">
+                      Part-sun
+                  </button>
+                  <button class="light-btn flex flex-col items-center" @click="setLightCondition('Full-sun')" :class="{ selected: selectedButton === 'Full-sun' }">
+                      <img src="../components/icons/fullSun.svg" style="width: 60px; height: 60px;" alt="Full sun icon">
+                      Full-sun
+                  </button>
+              </div>
+              <div class=" mt-5">
+                  <button class="buttonadmin w-40"  @click="confirmLightCondition">
+                      Confirm
+                      <div class="buttonadmin__horizontal"></div>
+                      <div class="buttonadmin__vertical"></div>
+                  </button>
+              </div>
+              </div> 
+              
+              
+              
+          </div>
         </div>
       </div>
     </div>
@@ -191,11 +191,9 @@ const closeModal = () => {
   
 <style scoped lang="scss">
   /* Add styling for the modal and its content */
-.modal {
-    width: 100%;  
+.modal { 
      .modal-content {   
         background-position-y: 50%;
-        width: clamp(300px, 50%, 800px);
         .h2{
             color: $white;
             font-family: $heading-font;
@@ -247,18 +245,20 @@ const closeModal = () => {
         }
     } 
     .light-content {
-        
-        padding: 0.5em  0;
+        margin: 2em 9em;
         color: $heading-color;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
         .light-btn {
-            width: 110px;
-            
+            width: 100px;
             border: none;
             &:hover {
                 cursor: pointer;
                 
             }
+        }
+        @media screen and (max-width: 768px) {
+            margin: 2em 2em;
+          
         }
     }
     
@@ -285,8 +285,7 @@ const closeModal = () => {
     box-shadow:  $focus -2px -2px 30px, inset $focus 2px 2px 30px;
     text-overflow: clip;
     transition: all 0.5s ease-in;
-    
-    }
+  }
  
 </style>
   

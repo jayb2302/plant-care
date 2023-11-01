@@ -24,11 +24,12 @@ $heading-text:#13130c;
 $subheading-text:rgb(43, 43, 36) ; 
 
 $modalbg:  rgba(213, 209, 209, 0.809);
-$modalcontentbg:  #ad998677;
+$modalcontentbg:  #8475669e;
 $signinbg:  rgba(213, 209, 209, 0.473);
+$plantcardbg: rgba(213, 209, 209, 0.948);
 $input: #d0bcb79b ;
 $backhover: #342226;
-$focus: #8ba84d78;
+$focus: #7a93448a;
 
 $myBackground: hsla(30, 1%, 64%, 1) 
               radial-gradient(at 86% 10%, hsla(28, 11%, 71%, 1) 0px, transparent 50%),
@@ -40,17 +41,7 @@ $myBackground: hsla(30, 1%, 64%, 1)
               radial-gradient(at 4% 12%, hsla(28, 11%, 71%, 1) 0px, transparent 50%);
 
 
-
-/* Color Theme Swatches in Hex */
-$mutedPink: #F2BDC7;
-$darkPink: #F288AF;
-$mutedBlue: #59D9CC;
-$darkBrown: #4C393B;
-$brightYellow: #FFEA70;
 $heading-color: #30382d;
-
-
-
 
 /* Font Variables */
 $heading-font: 'utopia-std-display', serif;

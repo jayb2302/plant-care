@@ -7,7 +7,7 @@
           <button class="search__button bg-black">
           </button>
       </div> -->
-        <div class="flex-col md:flex-row flex gap-5 md:pt-5">
+        <div class="flex-col md:flex-row flex gap-5 z-40 md:pt-5">
           <button class="buttonadmin z-10" @click="showAddPlantModal = true">
             <img class="leaf" src="../assets/img/twoleaves.svg" style=" height: 40px;" alt="Two leaf icon" />
             Add Plant
@@ -22,7 +22,7 @@
           </button>
         </div>
       <!--  // --- UserProfile --- // -->
-      <div class="user-profile absolute right-5 top-7 md:top-3">
+      <div class="user-profile absolute right-2 top-7 md:top-3">
         <div class=" ">
           <button
             class="user-btn relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -36,7 +36,7 @@
           enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
           leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
           <ul v-if="isDropdownOpen"
-            class="absolute right-5 z-10 mt-2 w-48 origin-top-right rounded-md cardbg py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md cardbg py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             @click.stop>
             <p> Hello {{ currentUser && currentUser.username ? currentUser.username : 'Loading...' }}</p>
 
@@ -47,16 +47,15 @@
     </div>
 
     <header class="shadow m-0 ">
-      <div class="header-container lg:mb-3  lg:flex lg:justify-between   pt-1 ">
-      </div>
-      <div id="modal-container">
+      
+      <div class="modal-container mx-10">
         <Teleport to="body">
-          <div class="modal-backgroun">
+          <div class="modal-background">
             <transition v-motion 
-            :initial="{ opacity: 0, y: 0, }" 
-            :variants="{ custom: { scale: 2 } }" 
-            :enter="{opacity: 1,y: 0, }">
-              <AddPlantModal :userId="userUid" @close="handleModalClose" class="two" v-if="showAddPlantModal" />
+              :initial="{ opacity: 0, y: 0, }" 
+              :variants="{ custom: { scale: 2 } }" 
+              :enter="{opacity: 1,y: 0, }">
+              <AddPlantModal :userId="userUid" @close="handleModalClose"  v-if="showAddPlantModal" />
             </transition>
           </div>
         </Teleport>
@@ -77,23 +76,17 @@
       </div>
     </header>
     <TabGroup class="tabgroup" as="navbar" v-if="isLoggedIn">
-      <TabList class="flex space-x-4 justify-center lg:justify-start">
-        <Tab class="cursor-pointer pl-5 pr-5" v-slot="{ selected }">
-        <h2 :class="{ 'bg-blue-500 text-white': selected, 'bg-white text-black': !selected }" >
+      <TabList class="flex space-x-4 mt-2 justify-center lg:justify-start">
+        <Tab class="cursor-pointer" v-slot="{ selected }">
+        <h2 class="" :class="{ 'active': selected,'nonActive': !selected }" >
           My Schedule
         </h2>
       </Tab>
-      <Tab class="cursor-pointer pl-5 pr-5"  v-slot="{ selected }">
-        <h2 :class="{ 'bg-blue-500 text-white': selected, 'bg-white text-black': !selected }">
+      <Tab class="cursor-pointer"  v-slot="{ selected }">
+        <h2 :class="{ 'active': selected,'nonActive': !selected }">
           My Sites
         </h2>
       </Tab>
-        <!-- <Tab class="cursor-pointer pl-5 pr-5"  v-slot="{ selected }">
-          <h2>My Schedule</h2>
-        </Tab>
-        <Tab class="cursor-pointer" :class="{ 'active': activeTab === 'sites' }">
-          <h2>My Sites</h2>
-        </Tab> -->
       </TabList>
 
       <TabPanels>
@@ -255,11 +248,20 @@ nav {
 h2 {
   font-family: $title-font;
   font-size: 1.1rem;
+  
 }
 
 .active {
-  border-bottom: 2px solid #000;
-  background-color: $focus;
-  color: #000;
+  background-color: $green;
+  color: $white;
+  border-radius: 10px;
+  
+}
+
+.nonActive {
+  background-color: $white;
+  color: $black;
+  border-radius: 10px;
+  
 }
 </style>

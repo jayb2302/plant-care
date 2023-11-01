@@ -109,6 +109,7 @@
 .widgetsbtn {
 	--offset: 5px;
 	--border-size: 2px;
+	z-index: 9999;
 	display: block;
 	height: 3em;
     width: 10em;

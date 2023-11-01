@@ -11,11 +11,6 @@ const router = createRouter({
       name: 'home',
       component: HomeView
     },
-    {
-      path: '/myschedule',
-      name: 'My Schedule',
-      component: () => import('../views/ScheduleView.vue')
-    },
     
     {
       path: '/signup',
@@ -25,13 +20,19 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../components/SignUpModal.vue')
     },
-
+    
     {
       path: '/adminpanel',
       name: 'AdminPanel',
       component: () => import('../views/AdminPanel.vue')
     },
 
+    {
+      path: '/myschedule',
+      name: 'My Schedule',
+      component: () => import('../views/ScheduleView.vue')
+    },
+    
     {
       path: '/mysitesview',
       name: 'MySitesView',
@@ -41,15 +42,7 @@ const router = createRouter({
       path: '/signin',
       name: 'SignInModal',
       component: () => import('../components/SignInModal.vue')
-    },
-    
-    {
-      path: '/createsite',
-      name: 'createsite',
-
-      component: () => import('../components/CreateSite.vue')
-    },
-   
+    }, 
   ]
 })
 

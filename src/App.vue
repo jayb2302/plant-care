@@ -1,7 +1,7 @@
 
 
 <template> 
-  <div id="app" class="w-screen ">
+  <div id="app" class="">
         <nav class="relative ">
           <RouterLink to="/">Home</RouterLink>
           <RouterLink to="/signin">SignIn</RouterLink>

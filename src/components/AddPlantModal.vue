@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div class="modal md:px-28">
     <div class="modal-content relative flex  flex-col  ">
       <h1 class="heading text-3xl font-semibold pb-3 text-center ">Add your plant</h1>
       <button class="absolute top-5 right-5" @click="$emit('close')">
@@ -8,10 +8,10 @@
           </svg>
       </button>
       <div class="plant-card md:flex ">
-        <div class="plantInputContainer md:w-1/3">
+        <div class="plantInputContainer md:w-full">
           <input
               type="text"
-              class="search__input p-1 mb-2 lg:md-5 text-center "
+              class="search__input p-1 mb-2 lg:md-5 text-start pl-4 "
               v-model="searchQuery"
               @input="handleInput"
               placeholder="Search plant species…"
@@ -20,16 +20,16 @@
           <div class="plant-selection relative overflow-y-auto  md:flex md:flex-col md:gap-2  ">
           </div>
           <div class="flex">
-            <ul v-if="searchQuery" class="suggestions w-full overflow-auto  ">
+            <ul v-if="searchQuery" class="suggestions w-full pt-1 overflow-auto  ">
               <li class="p-2" v-if="isLoading">
-                <h2 class="pl-2 p-2"> Loading ...</h2> 
+                <h2 class="pl-2 p-2">Loading ...</h2> 
               </li>
               <li class="p-2" v-else-if="!plantResults.length && !isLoading">
                 <h2 class="pl-3 pb-2" >No results, please type in the input</h2>
               </li>
               <template v-else>
-                <li class="overflow-hidden w-full flex flex-col pl-2 p-2" v-for="plant in plantResults" :key="plant.id" @click="selectPlant(plant)">
-                  <h2 class=" pl-2 ">{{ plant.common_name }} </h2>
+                <li class="overflow-hidden w-full flex flex-col pl-2 p-1" v-for="plant in plantResults" :key="plant.id" @click="selectPlant(plant)">
+                  <h2 class="pl-2 truncate">{{ plant.common_name }} </h2>
                 </li>
               </template>
             </ul>
@@ -55,19 +55,20 @@
           </div>
         </div>
         
-        <div class="plantSuggestion-container md:relative flex  md:flex-col w-full md:w-2/3 items-center ">
-          <div class="plantSuggestion-content w-full md:left-5 md:top-20 flex  flex-wrap mt-3" v-if="selectedPlant">
-            <div class=" w-full flex ">
-             <div class="text-sm md:text-lg flex-grow">
+        <div class="plantSuggestion-container md:relative flex  md:flex-col w-full  items-center ">
+          <transition name="slide-fade">
+          <div class="plantSuggestion-content w-full  md:top-20 flex flex-wrap mt-3" v-if="selectedPlant">
+            <div class=" w-full flex md:flex-col pt-1 ">
+              <div class="text-sm  md:text-lg pb-3 md:justify-center md:flex-grow">
                 <h2 class="">{{ selectedPlant.common_name }}</h2>
-                <p class=" "><strong>{{ selectedPlant.scientific_name.join(', ') }}</strong></p>
+                <p class=""><strong>{{ selectedPlant.scientific_name.join(', ') }}</strong></p>
                 <p>Water every <strong>{{ selectedPlant.watering_general_benchmark.value }}</strong>  {{ selectedPlant.watering_general_benchmark.unit }}</p>
-                <p><strong>Light needs</strong> <br> {{ selectedPlant.sunlight.join(', ') }}</p>
-                <p><strong>Ease of Care </strong><br> {{ selectedPlant.care_level }}</p>
-             </div>
-             
+              </div>
               <img class="clip " :src="selectedPlant.default_image.small_url" alt="Plant Image" />
-             
+            </div>
+            <div class="flex divide-x-2 divide-zinc-400 divide-dashed w-full mt-3">
+              <p class="w-1/2"><strong>Light needs</strong> <br> {{ selectedPlant.sunlight.join(', ') }}</p>
+              <p class="w-1/2 pl-3"><strong>Ease of Care </strong><br> {{ selectedPlant.care_level }}</p>
             </div>
 
             <button class="site-btn  mt-2 md:mt-5" @click="confirmPlantSelection">
@@ -76,15 +77,13 @@
             
             <div class="error-message w-full text-center" v-if="!selectedSite">Please select a site!</div>
           </div>            
-
+        </transition>
           <div class="success-message pt-2 w-full text-center" v-if="showSuccessMessage">
             <strong class="success">
               Plant added successfully!
             </strong> 
           </div>  
         </div>
-     
- 
       </div>
 
       <teleport to="body">
@@ -106,7 +105,7 @@ import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import { getPlantList, getPlantById } from '../modules/plantapi';
 import { debounce } from 'lodash';
-import AddSiteModal from './AddSiteModal.vue';
+import AddSiteModal from '../components/AddSiteModal.vue';
 import { getCurrentUser } from '../auth.js';
 
 const searchQuery = ref('');
@@ -252,7 +251,7 @@ onMounted(() => {
         border-radius: 10px;
         box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;        overflow: hidden;
         padding: 1rem 1rem;
-        background-color: $signinbg;
+        background-color: $plantcardbg;
         height: auto;
       .suggestions {
         box-shadow: rgb(147, 149, 150) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
@@ -305,9 +304,18 @@ onMounted(() => {
   filter: drop-shadow(0 0 4px $black);
   width: 290px;
   height: 240px;
+  margin: 0 auto;
   @media screen and (max-width: 900px) {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 120px;
   }
+}
+
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.5s;
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
 }
 </style>

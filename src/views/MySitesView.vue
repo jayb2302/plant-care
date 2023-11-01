@@ -1,30 +1,29 @@
 <template>
-  <div class="lg:flex  w-full p-3    h-[85vh] ">
+  <div class="lg:flex   p-3    h-[70vh] ">
     <!-- Sidebar for sites -->
-    <div class="sitesSidebar w-full md:w-5/12 p-2 border-r absolute hidden md:block">
-      <div class="   ">
-        <div class="flex flex-col w-full flex-wrap ">
+    <div class="sitesSidebar  md:w-2/12 p-2 border-r absolute right-0 top-48 hidden md:block">
+        <div class="flex flex-col relative   z-50 lg:z-0  flex-wrap ">
           <div
             v-for="site in sites"
             :key="site.id"
             @click="selectSite(site)"
-            class="siteList cursor-pointer z-10  w-4/12 rb p-2 mb-2 flex flex-grow justify-between "
+            class="siteList cursor-pointer w-full  p-2 border-b-2 border-neutral-200  flex flex-grow justify-between "
             :class="{ 'bg-gray-200': selectedSite && selectedSite.id === site.id }"
           >
-            <h2 class="text-lg">{{ site.name }}</h2>
+            <h2 class=" pl-3  text-lg">{{ site.name }}</h2>
           <button  @click="confirmSiteDelete(site)" class="">
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="35" height="40" viewBox="0 0 32 32">
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="30" viewBox="0 0 32 32">
               <path d="M 11 2 L 11 4 L 21 4 L 21 2 L 11 2 z M 4 6 L 4 8 L 28 8 L 28 6 L 4 6 z M 7.9921875 9.875 L 6.0078125 10.125 C 6.0078125 10.125 7 18.074074 7 27 L 7 28 L 25 28 L 25 27 C 25 18.074074 25.992188 10.125 25.992188 10.125 L 24.007812 9.875 C 24.007812 9.875 23.120303 17.398914 23.042969 26 L 8.9570312 26 C 8.8796974 17.398914 7.9921875 9.875 7.9921875 9.875 z M 12.986328 10.835938 L 11.013672 11.164062 C 11.013672 11.164062 12 17.111111 12 23 L 14 23 C 14 16.888889 12.986328 10.835936 12.986328 10.835938 z M 19.013672 10.835938 C 19.013672 10.835938 18 16.888889 18 23 L 20 23 C 20 17.111111 20.986328 11.164064 20.986328 11.164062 L 19.013672 10.835938 z"></path>
             </svg>
           </button>
           </div>
         </div>
-      </div>
+     
     </div>
 
     <!-- Toggle button for the sidebar (shown on small screens) -->
-    <div class="md:hidden w-2/12 p-1 border-r">
-      <button @click="toggleSidebar" class="z-10 cursor-pointer">
+    <div class="md:hidden  w-full flex justify-end p-1 border-r">
+      <button @click="toggleSidebar" class=" cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"
@@ -47,10 +46,9 @@
       v-motion="'fade'"
       :initial="{ opacity: 0 }"
       :enter="{ opacity: 1 }"
-      :leave="{ opacity: 0 }"  class="plantsList-wrapper relative md:w-9/12 bottom-10 md:left-48  md:top-0 flex flex-col sm:w-full p-1">
-     
-      <div  class="plantsList-content flex flex-col h-[60vh] overflow-y-auto" v-if="selectedSite">
-        <h2 class="text-2xl mb-5 pl-5">Plants in {{ selectedSite.name }}</h2>
+      :leave="{ opacity: 0 }"  class="plantsList-wrapper -top-9 -z-10  lg:z-0 relative md:w-10/12 bottom-10   md:top-10 flex flex-col sm:w-full p-1">
+      <div  class="plantsList-content  flex flex-col h-4/4 overflow-y-auto" v-if="selectedSite">
+        <h2 class="text-2xl mb-1 pl-5">Plants in {{ selectedSite.name }}</h2>
         <div class="myplant-card flex m-2 flex-wrap gap-2 justify-center">
           <div class="myplant relative p-2 w-full md:w-1/2 lg:w-1/4" v-for="(plant) in filteredPlants" :key="plant.id">
             <div v-motion
@@ -311,6 +309,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 
 .siteList {
+  background-color: $lightgray;
   button {
     display: none;
     
@@ -321,9 +320,14 @@ onMounted(async () => {
         display: block;
       }
     }
+  @media screen and (max-width: 768px) {
+    
+    button {
+      display: block;
+    }
+  }
 }
 .modal {
-  padding: 10em 20em;
   
  .modal-content {
   background-color: $lightgray;
@@ -363,10 +367,10 @@ onMounted(async () => {
     radial-gradient(at 60% 71%, hsla(7,37%,74%,1) 0px, transparent 50%),
     radial-gradient(at 27% 65%, hsla(60,0%,24%,1) 0px, transparent 50%),
     radial-gradient(at 4% 12%, hsla(28,11%,71%,1) 0px, transparent 50%);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(150, 150, 150, 0.284);
-        border-radius: 10px;
-        box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;       
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(150, 150, 150, 0.284);
+  border-radius: 10px;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;       
     
   .plantsList-content {
     

@@ -84,8 +84,8 @@
           
         >
           <div class="modal" v-if="showModal">
-            <div id="modal" class="modal-content"> 
-              <div id="background" class="background">
+            <div  class="modal-content"> 
+              <div id="background" class="leaf-background">
                 <div class="leaf leaf1"></div>
                 <div class="leaf leaf2"></div>
                 <div class="leaf leaf3"></div>
@@ -94,7 +94,7 @@
                 <div class="leaf leaf6"></div>
               </div>
             <!-- Render SignInModal.vue component here -->
-              <SignInModal  @close="closeModal" />
+              <SignInModal @close="closeModal" />
               <img id="leafImage" src="" alt="">
             </div>
           </div>
@@ -270,8 +270,7 @@ nav {
   
 }
 
-
-.background {
+.leaf-background {
   position: fixed;
   top: 0;
   left: 0;

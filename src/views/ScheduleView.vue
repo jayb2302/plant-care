@@ -1,9 +1,9 @@
 <template>
-  <div class="schedule w-full lg:h-[85vh]">
-    <main class="shadow mt-3 lg:flex justify-center lg:gap-5">
+  <div class="schedule w-full ">
+    <main class="shadow mt-3 pb-5 lg:flex justify-center lg:gap-5">
       <!-- Tips & Notes -->
       <div class="tips-container relative h-[10vh] lg:h-[60vh] lg:w-4/12 cardbg">
-        <button @click="toggleTips" class="widgetsbtn absolute top-2 left-2 lg:left-5" :class="{ 'expanded': showTips }">
+        <button @click="toggleTips" class="widgetsbtn  absolute top-2 left-2 lg:left-5" :class="{ 'expanded': showTips }">
           <div class="widgetsbtn__horizontal"></div>
           <div class="widgetsbtn__vertical"></div>
           {{ showTips ? 'Hide Tips' : 'Plant Tips' }}
@@ -18,7 +18,7 @@
               </div>
             </div>
             <!-- Notes Component -->
-            <div v-if="showNotes" class="notes-container  bottom-1">
+            <div v-if="showNotes" class="notes-container relative z-40 bottom-1">
               <AddUserNotes /> <!-- Render your notes component here -->
             </div>
           </div>
@@ -36,7 +36,7 @@
         </h2>
         <div class="task-cards h-6/6 relative flex flex-col gap-3">
           <!-- Past Watering -->
-          <h2 :class="{ 'red-background': hasPastWateringPlants }" class="pl-3 text-lg text-justify sticky -top-0 bold">
+          <h2 :class="{ 'red-background': hasPastWateringPlants }" class="pl-3 text-lg text-justify  -top-0 bold">
             Urgent
             <button class="absolute right-5" @click="isUrgentExpanded = !isUrgentExpanded">
               <span v-if="isUrgentExpanded">▲</span>
@@ -263,12 +263,6 @@ const hasPastWateringPlants = computed(() => pastWateringPlants.value.length > 0
 const hasPlantsToWaterToday = computed(() => plantsToWaterToday.value.length > 0);
 const hasPlantsToWaterTomorrow = computed(() => plantsToWaterTomorrow.value.length > 0);
 </script>
-
-
-
-
-
-
 
 <style lang="scss">
 nav {
