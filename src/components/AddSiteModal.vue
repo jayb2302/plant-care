@@ -1,17 +1,17 @@
 <template>
     <div class="modal mt-1 " @click="closeModal">
       <!-- Modal content -->
-      <div class="modal-content pt-2 flex flex-col   " @click.stop>
+      <div class="modal-content flex flex-col   " @click.stop>
         <h2 class="h2 text-3xl text-center">Select a Site</h2>
             <button class=" w-40" @click="$emit('close')">
                 <svg class="close-btn" xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
                     <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>
                 </svg>
             </button>
-        <div class="site-list w-4/4 lg:w-12/12  flex  flex-row flex-wrap   ">
+        <div class="site-list w-4/4 lg:w-12/12 items-evenly flex  flex-row flex-wrap  ">
           <!-- Render the list of sites with thumbnails and headings -->
             <div
-                class="site-card w-2/4 lg:w-2/12 p-1  flex lg:flex-col lg:m-1 "
+                class="site-card w-5/12 lg:w-2/12 p-1  flex lg:flex-col lg:m-1 "
                 v-for="site in sites"
                 :key="site.id"
                 @click="selectSite(site)"
@@ -86,6 +86,7 @@ import { ref, onMounted } from 'vue';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase'; 
 import { getCurrentUser } from '../auth';
+import { useToast } from 'vue-toastification';
 
 import officeThumbnail from '@/assets/img/office.jpeg';
 import bedroomThumbnail from '@/assets/img/bedroom.jpeg';
@@ -148,16 +149,30 @@ const selectedButton = ref(null);
 const isButtonSelected = ref(false);
 
 const setLightCondition = (condition) => {
-    selectedButton.value = condition;
-    lightCondition.value = condition;
+  selectedButton.value = condition;
+  lightCondition.value = condition;
 };
 
 const addSiteToFirestore = async (site, user) => {
   if (user) {
+    const toast = useToast();
     try {
       const sitesCollection = collection(db, 'sites');
       await addDoc(sitesCollection, { ...site, userId: user.uid, lightCondition: lightCondition.value });
-      console.log('Site added to Firestore');
+      toast.success("You have created a new site!", {
+          position: "bottom-center",
+          timeout: 5000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false
+        });
     } catch (error) {
       console.error('Error adding site to Firestore:', error);
     }
@@ -179,6 +194,7 @@ const confirmLightCondition = async () => {
     isButtonSelected.value = !isButtonSelected.value;
   } else {
     alert('Please select a light condition before confirming.');
+
   }
 };
 
@@ -201,37 +217,35 @@ const closeModal = () => {
             text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5), 0 0 1em rgba(0, 0, 0, 0.5);
         }
         .site-list{
-            
             justify-content: center;
-            background-color: rgba(255, 255, 255, 0.395);
-            padding: 2% 0;
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;            
+            background-color: $plantcardbg;
+            padding: 0.4em 0.4em;
+            margin: 0.5em 0.5em;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 20px 0px, rgba(0, 0, 0, 0.19) 0px 7px 20px ;            
             .site-card{
-                width: calc(100% / 6 - 80%);
+                
                 background-color: $beige;
                 font-family: $title-font;
                 font-weight: 900;
                 letter-spacing: 2px;
                 font-size: 1.5em;
                 color: $white;
-                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
-               
                 img {
                     width: 170px;
                     height: 15vh;
                     filter: opacity(0.8);
-                    
+                    box-shadow: rgba(179, 165, 165, 0.35) 0px 5px 15px;
                     &:hover{
-                        filter: opacity(1);
-                        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;                        
-                        scale: 1.1 ;
-                        transition: all 0.5s ease-in-out;
-                        
+                      filter: opacity(1);
+                      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;                        
+                      scale: 1.1 ;
+                      transition: all 0.5s ease-in-out;
+
                     }
                 }
                 h3{
-                    bottom: 10%;
+                    bottom: 3%;
                     color: $white;
                     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5), 0 0 1em rgba(0, 0, 0, 0.5),  0 0 1em rgba(0, 0, 0, 0.5) , 0 0 1em rgba(0, 0, 0, 0.5);
                 }
@@ -239,6 +253,13 @@ const closeModal = () => {
                     cursor: pointer;
                     
                     
+                }
+                @media screen and (max-width: 768px) {
+                    font-size: 1em;
+                    img {
+                        width: 100px;
+                        height: 10vh;
+                    }
                 }
             }
 
@@ -258,7 +279,6 @@ const closeModal = () => {
         }
         @media screen and (max-width: 768px) {
             margin: 2em 2em;
-          
         }
     }
     
@@ -284,7 +304,7 @@ const closeModal = () => {
     font-weight: bold;
     box-shadow:  $focus -2px -2px 30px, inset $focus 2px 2px 30px;
     text-overflow: clip;
-    transition: all 0.5s ease-in;
+    transition: all 0.1s ease-in;
   }
  
 </style>

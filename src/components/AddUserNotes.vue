@@ -1,7 +1,7 @@
 <template>
     <div class="w-full ">
       <!-- Display Notes -->
-      <div class="notecard md:h-[55vh] mt-5 pt-5 flex-grow overflow-auto ">
+      <div class="notecard md:h-[55vh] h-[20vh] md:mt-5 pt-5 flex-grow overflow-auto ">
         <div class="wrapper p-2" v-for="(note, id) in notes" :key="note">
           <div class="paper flex flex-col" v-if="note.editing">
             <!-- Edit Mode -->

@@ -237,11 +237,11 @@
 	background-color: #0070f3; /* Initial background color */
 	color: #ffffff; /* Initial text color */
 	transition: background-color 0.3s, color 0.3s; /* Transition for color changes */
-  }
+}
   
 .watering-button.clicked {
-background-color: #34d399; /* New background color when clicked */
-color: #000000; /* New text color when clicked */
+background-color: $focus; /* New background color when clicked */
+color: $black; /* New text color when clicked */
 }
 
 .user-btn{

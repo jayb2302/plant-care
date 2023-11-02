@@ -100,13 +100,14 @@
 
 
 <script setup props="props">
-import { ref, onMounted, } from 'vue'; 
+import { ref, onMounted } from 'vue'; 
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import { getPlantList, getPlantById } from '../modules/plantapi';
 import { debounce } from 'lodash';
 import AddSiteModal from '../components/AddSiteModal.vue';
 import { getCurrentUser } from '../auth.js';
+import { useToast } from 'vue-toastification';
 
 const searchQuery = ref('');
 const selectedPlant = ref(null);
@@ -188,6 +189,7 @@ const addPlantToFirestore = async (plantData, siteId, plant_nickname, userId) =>
   const plantCollection = collection(db, 'plants');
 
   try {
+    const toast = useToast();
     // Create a new document in the 'plants' collection with the selected plant's details
     const newPlantDoc = await addDoc(plantCollection, {
       siteId: siteId,
@@ -201,9 +203,23 @@ const addPlantToFirestore = async (plantData, siteId, plant_nickname, userId) =>
       care_level: plantData.care_level,
       last_watered: lastWateredDate.value,
     });
-
+    toast.success("You have created a new site!", {
+          position: "bottom-center",
+          timeout: 5000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false
+        });
     // Return the newly added document
     return newPlantDoc;
+  
   } catch (error) {
     console.error('Error adding the plant: ', error);
     return null; // Return null in case of an error

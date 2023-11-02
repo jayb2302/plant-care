@@ -4,7 +4,7 @@
     <div class="heading-container flex-col flex">
       <div class="heading-bg absolute top-40 ">
       </div>
-      <div class="lg:w-6/12 absolute top-48 pl-10 md:top-32 md:left-0 ">
+      <div class="lg:w-6/12 absolute w-full top-40 md:top-32 md:left-0 ">
         <svg class="textdo  ">
           <text class="" x="50%" y="50%" dy=".15em" text-anchor="middle">
             Do you
@@ -12,8 +12,8 @@
         </svg>
       </div>
 
-      <h1 class="-mt-4 ">Plant</h1>
-      <div class="lg:w-6/12 absolute bottom-48 right-5 md:bottom-32 md:right-0">
+      <h1 class="-mt-4">Plant</h1>
+      <div class="lg:w-6/12 absolute w-full bottom-48 right-5 md:bottom-32 md:right-0">
         <svg class="">
           <text class="textcare" x="50%" y="40%" dy=".35em" text-anchor="middle">
             Care ?
@@ -96,7 +96,7 @@
                 <div class="leaf leaf2"></div>
                 <div class="leaf leaf3"></div>
                 <div class="leaf leaf4"></div>
-                <div class="leaf leaf5"></div>
+               
                 <div class="leaf leaf6"></div>
               </div>
               <!-- Render SignInModal.vue component here -->
@@ -193,7 +193,7 @@ nav {
       z-index: 1;
       text-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3),
         0px -7px 10px rgba(255, 255, 255, 0.3, ), -4px 2px 3px rgba(255, 255, 255, 0.3);
-      font-size: 7em;
+      font-size: 6.5em;
       color: $heading-text;
       font-weight: 900;
     }
@@ -210,7 +210,7 @@ nav {
   button {
     position: relative;
     height: 60px;
-    width: 150px;
+    width: 20vw;
     font-size: 2em;
     font-weight: bold;
     color: $darkbeige;
@@ -286,15 +286,15 @@ nav {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vh;
   height: 100%;
   z-index: 0;
 
   .leaf {
-    position: absolute;
-    width: 95vw;
+    position: fixed;
+    width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    overflow: auto;
     background-size: contain;
     background-repeat: no-repeat;
     animation: fadeIn 9s forwards;
@@ -303,36 +303,35 @@ nav {
     
 
     &.leaf2 {
-      bottom: -40vh;
+      top: 200px;
       left: 5%;
-      transform: translate(5%, 5%);
+      transform: translatey(30px) rotate(30deg) translatey(-1);
       animation: fadeIn 9s forwards, leafMovement2 3s infinite alternate 0.4s;
       background-image: url(../assets/img/leaf2.png);
-      background-position-y: -50%;
-      background-position-x: -40%;
+      background-size: contain;
 
     }
 
     &.leaf3 {
-      bottom: 20%;
+      top: 100px;
       left: -8%;
-      transform:  scalex(2);
+      transform:  scale(4);
       animation: fadeIn 9s forwards, leafMovement3 3s infinite alternate 0.3s;
       background-image: url(../assets/img/leaf2.png);
-      background-position-y: -90%;
-      
+      background-size: contain;
+  
     }
 
     &.leaf4 {
-      top: 10vh;
-     right: -70%;
-      transform:   scale(3) ;
-      animation: fadeIn 8s forwards, leafMovement4 30s infinite alternate 2s;
+      top: 500px;
+      left : 800px;
+      transform: translateX(-800px)  scale(2)  ;
+      animation: fadeIn 12s forwards, leafMovement4 30s infinite alternate 2s;
       background-image: url(../assets/img/leaf4.png);
     }
 
     &.leaf5 {
-      bottom: -15vh;
+      bottom: 200px;
       left: 80%;
       transform:   scale(2) ;
       animation: fadeIn 8s forwards, leafMovement5 20s infinite alternate 1s;
@@ -413,19 +412,19 @@ nav {
 }
 @keyframes leafMovement3 {
   0% {
-    transform: translateY(0);
+    transform: scale(1);
   }
   50% {
     transform: translate(-10px);
   }
   100% {
-    transform: translateY(0);
+    transform: translateY(0) scaleY(1);
   }
 }
 
-@keyframes leafMovement5 {
+@keyframes leafMovement4 {
   0% {
-    transform: scale(2) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    transform:  scale(4) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(200px);
   }
  
   100% {

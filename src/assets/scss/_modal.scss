@@ -59,10 +59,14 @@ input {
   border-radius: 10px;
   box-shadow:
     rgba(255, 255, 255, 0.8) 0px 1px 1px 0px inset,
-    rgba(50, 50, 93, 0.5) 0px 50px 100px -20px,
-    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    rgba(111, 111, 112, 0.438) 0px 50px 100px -20px,
+    rgba(119, 115, 115, 0.3) 0px 30px 70px -30px;
   padding: 0.8em 0.8em;
   background-color: $lightgray;
+}
+.gradient{
+  background-image: linear-gradient(190deg, $lightgray 0%, $darkergray 100%);
+  box-shadow: rgba(158, 160, 162, 0.749) 0px -20px 30px -10px, rgba(111, 111, 112, 0.624) -2px -30px -30px -10px ,  rgba(255, 255, 255, 0.8) 0px 1px 1px 0px inset;
 }
 .notecard {
   ::selection {
@@ -90,7 +94,7 @@ input {
 
 .red-background {
   border: 6px double $red;
-  border-radius: 30px;
+  border-radius: 10px;
   background-color: transparentize($red, $amount: 0.8);
   animation: pulse infinite 1.5s ease-in-out;
   visibility: visible;
@@ -100,13 +104,16 @@ input {
   border: 6px double $yellow;
   background-color: transparentize($yellow, $amount: 0.8);
   animation: pulse forwards 2s ease-in-out;
+  border-radius: 10px;
+  visibility: visible;
 }
 
 .green-background {
   border: 6px double $green;
   border-radius: 30px;
   background-color: transparentize($green, $amount: 0.8);
-  
+  visibility: visible;
+ 
 }
 
 @keyframes pulse {
@@ -217,7 +224,7 @@ input {
 }
 
 .admin {
-  background-color: hsla(28, 11%, 71%, 0.3);
+  background-color: hsla(31, 39%, 83%, 0.3);
   background-image: radial-gradient(at 53% 54%, hsla(28, 11%, 71%, 0.3) 0px, transparent 50%),
     radial-gradient(at 76% 79%, hsla(0, 0%, 34%, 0.46) 0px, transparent 50%),
     radial-gradient(at 73% 21%, hsla(197, 8%, 83%, 0.3) 0px, transparent 50%),

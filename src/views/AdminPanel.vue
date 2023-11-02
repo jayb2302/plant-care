@@ -25,18 +25,18 @@
       <div class="user-profile absolute right-2 top-7 md:top-3">
         <div class=" ">
           <button
-            class="user-btn relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            class="user-btn  flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             @click="toggleDropdown">
             <span class="absolute -inset-1.5" />
             <span class="sr-only">Open user menu</span>
-            <img class="h-14 w-14 rounded-full bg-none  " src="../components/icons/userking.svg" alt="" />
+            <img class=" sticky top-10 h-14 w-14 rounded-full bg-none  " src="../components/icons/userking.svg" alt="" />
           </button>
         </div>
         <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95"
           enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
           leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
           <ul v-if="isDropdownOpen"
-            class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md cardbg py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md cardbg py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             @click.stop>
             <p> Hello {{ currentUser && currentUser.username ? currentUser.username : 'Loading...' }}</p>
 
@@ -76,7 +76,7 @@
       </div>
     </header>
     <TabGroup class="tabgroup" as="navbar" v-if="isLoggedIn">
-      <TabList class="flex space-x-4 mt-2 justify-center lg:justify-start">
+      <TabList class="flex sticky top-2 z-40 md:-mt-3 space-x-4 x-3 py-1 justify-center gradient lg:justify-start">
         <Tab class="cursor-pointer" v-slot="{ selected }">
         <h2 class="ml-2 px-2" :class="{ 'active': selected,'nonActive': !selected }" >
           My Schedule
@@ -256,7 +256,7 @@ h2 {
 }
 
 .active {
-  background-color: $green;
+  background-color: $focus;
   color: $white;
   border-radius: 10px;
   
