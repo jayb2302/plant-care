@@ -93,6 +93,7 @@ input {
   border-radius: 30px;
   background-color: transparentize($red, $amount: 0.8);
   animation: pulse infinite 1.5s ease-in-out;
+  visibility: visible;
 }
 
 .yellow-background {
@@ -105,6 +106,7 @@ input {
   border: 6px double $green;
   border-radius: 30px;
   background-color: transparentize($green, $amount: 0.8);
+  
 }
 
 @keyframes pulse {

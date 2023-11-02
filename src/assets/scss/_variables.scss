@@ -79,3 +79,10 @@ $heading-size: 5rem;
     }
   }
 
+.text-background {
+  background-color: $darkbeige;
+  color: $white;
+  font-family: $heading-text;
+  text-transform: capitalize;
+}
+

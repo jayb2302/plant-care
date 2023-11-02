@@ -1,7 +1,7 @@
 <template>
     <div class="w-full ">
       <!-- Display Notes -->
-      <div class="notecard h-[55vh] mt-5 pt-5 flex-grow overflow-auto ">
+      <div class="notecard md:h-[55vh] mt-5 pt-5 flex-grow overflow-auto ">
         <div class="wrapper p-2" v-for="(note, id) in notes" :key="note">
           <div class="paper flex flex-col" v-if="note.editing">
             <!-- Edit Mode -->
@@ -18,7 +18,7 @@
           <div class="wrapper  flex flex-col" v-else>
             <!-- View Mode -->
             <div class="paper overflow-y-auto  flex flex-col gap-1">
-              <p class="w-full pl-2 -mt-1 ">{{ note.text }}</p>
+              <p class="md:w-full pl-2 -mt-1 ">{{ note.text }}</p>
               <div class="flex justify-end">
               <button class="edit" @click="startEdit(id)">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 30 30">
@@ -37,8 +37,8 @@
       </div>
       <!-- Add Note -->
       <div class="noteInput-wrapper flex w-full ">
-        <div class="noteInput-container w-full  flex flex-col items-end">
-          <textarea class="noteText-input p-1 mt-1" v-model="newNote" @keyup.enter="addNote"></textarea>
+        <div class="noteInput-container w-full  flex flex-col relative top-0 items-end">
+          <textarea class="noteText-input p-1 md:mt-5" v-model="newNote" @keyup.enter="addNote"></textarea>
             <button class="z-1   " @click="addNote">
               <svg class="add-btn " xmlns="http://www.w3.org/2000/svg" width="17.828" height="17.828">
                   <path d="m2.828 17.828 6.086-6.086L15 17.828 17.828 15l-6.086-6.086 6.086-6.086L15 0 8.914 6.086 2.828 0 0 2.828l6.085 6.086L0 15l2.828 2.828z"/>

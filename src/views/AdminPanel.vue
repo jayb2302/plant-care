@@ -78,12 +78,12 @@
     <TabGroup class="tabgroup" as="navbar" v-if="isLoggedIn">
       <TabList class="flex space-x-4 mt-2 justify-center lg:justify-start">
         <Tab class="cursor-pointer" v-slot="{ selected }">
-        <h2 class="" :class="{ 'active': selected,'nonActive': !selected }" >
+        <h2 class="ml-2 px-2" :class="{ 'active': selected,'nonActive': !selected }" >
           My Schedule
         </h2>
       </Tab>
       <Tab class="cursor-pointer"  v-slot="{ selected }">
-        <h2 :class="{ 'active': selected,'nonActive': !selected }">
+        <h2 class="px-2" :class="{ 'active': selected,'nonActive': !selected }">
           My Sites
         </h2>
       </Tab>
@@ -93,7 +93,7 @@
         <TabPanel>
           <Schedule />
         </TabPanel>
-        <TabPanel>
+        <TabPanel >
           <MySitesView />
         </TabPanel>
       </TabPanels>
@@ -248,6 +248,10 @@ nav {
 h2 {
   font-family: $title-font;
   font-size: 1.1rem;
+  @media  screen and (max-width: 768px) {
+    font-size: 0.8rem;
+    
+  }
   
 }
 

@@ -1,6 +1,6 @@
 <template>
     <div class="signInSignUp-wrapper logIn-wrapper flex flex-col">
-      <button @click="closeModal">
+      <button @click="$emit('close')">
         <svg class="back-btn" xmlns="http://www.w3.org/2000/svg" width="24.703" height="24.928">
           <path d="M1.056 21.928c0-6.531 5.661-9.034 10.018-9.375V18.1L22.7 9.044 11.073 0v4.836a10.5 10.5 0 0 0-7.344 3.352C-.618 12.946-.008 21 .076 21.928z" />
         </svg>
@@ -37,66 +37,68 @@
     </div>
 </template>
   
-  <script setup>
-  import { ref } from "vue";
-  import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-  import { useRouter } from 'vue-router';
-  import SignUpModal from './SignUpModal.vue';
+<script setup>
+import { ref } from "vue";
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import SignUpModal from './SignUpModal.vue';
+
+const email = ref('');
+const password = ref('');
+const errMsg = ref('');
+const router = useRouter();
+const showModal = ref(false);
+defineEmits(['closeModal']);
+
+const signIn = () => {
+  signInWithEmailAndPassword(getAuth(), email.value, password.value)
+    .then(() => {
+      console.log("Successfully signed in!");
+      const currentRoute = router.currentRoute.value.path;
+      if (currentRoute === '/adminpanel') {
+        closeModal();
+      } else {
+        router.push('/adminpanel');
+      }
+    })
+    .catch((error) => {
+      console.log(error.code);
+      switch (error.code) {
+        case "auth/invalid-email":
+          errMsg.value = "Invalid email";
+          break;
+        case "auth/user-not-found":
+          errMsg.value = "No account with that email was found";
+          break;
+        case "auth/wrong-password":
+          errMsg.value = "Incorrect password";
+          break;
+        default:
+          errMsg.value = "Email or password was incorrect";
+      }
+    });
+};
   
-  const email = ref('');
-  const password = ref('');
-  const errMsg = ref('');
-  const router = useRouter();
-  const showModal = ref(false);
+const checkEnterKey = (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    signIn();
+  }
+};
   
-  const signIn = () => {
-    signInWithEmailAndPassword(getAuth(), email.value, password.value)
-      .then(() => {
-        console.log("Successfully signed in!");
-        const currentRoute = router.currentRoute.value.path;
-        if (currentRoute === '/adminpanel') {
-          closeModal();
-        } else {
-          router.push('/adminpanel');
-        }
-      })
-      .catch((error) => {
-        console.log(error.code);
-        switch (error.code) {
-          case "auth/invalid-email":
-            errMsg.value = "Invalid email";
-            break;
-          case "auth/user-not-found":
-            errMsg.value = "No account with that email was found";
-            break;
-          case "auth/wrong-password":
-            errMsg.value = "Incorrect password";
-            break;
-          default:
-            errMsg.value = "Email or password was incorrect";
-        }
-      });
-  };
+const showRegisterModal = () => {
+  showModal.value = true;
+};
   
-  const checkEnterKey = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      signIn();
-    }
-  };
+const closeModal = () => {
+  showModal.value = false;
+};
   
-  const showRegisterModal = () => {
-    showModal.value = true;
-  };
-  
-  const closeModal = () => {
-    showModal.value = false;
-  };
-  
-  const closeSignUpModal = () => {
-    showModal.value = false; // Close the registration modal here
-  };
-  </script>
+const closeSignUpModal = () => {
+  showModal.value = false; // Close the registration modal here
+};
+
+</script>
   
 
 

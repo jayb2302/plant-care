@@ -2,18 +2,23 @@
   <div class="schedule w-full ">
     <main class="shadow mt-3 pb-5 lg:flex justify-center lg:gap-5">
       <!-- Tips & Notes -->
-      <div class="tips-container relative h-[10vh] lg:h-[60vh] lg:w-4/12 cardbg">
-        <button @click="toggleTips" class="widgetsbtn  absolute top-2 left-2 lg:left-5" :class="{ 'expanded': showTips }">
+        <button @click="toggleNotes" class="widgetsbtn absolute left-5 top-38  lg:fixed  lg:left-2 xl:left-24  expand-button">
+          <div class="widgetsbtn__horizontal"></div>
+          <div class="widgetsbtn__vertical"></div>
+          My Notes
+        </button>
+        <button @click="toggleTips" class="widgetsbtn absolute lg:fixed  top-38 left-40 lg:left-46 xl:left-72" :class="{ 'expanded': showTips }">
           <div class="widgetsbtn__horizontal"></div>
           <div class="widgetsbtn__vertical"></div>
           {{ showTips ? 'Hide Tips' : 'Plant Tips' }}
         </button>
+      <div class="tips-container overflow-y-auto   relative h-[25vh] lg:h-[75vh] lg:w-4/12 cardbg">
         <transition name="expand-fade" mode="out-in">
           <div v-if="showTips || showNotes" key="content">
             <!-- Plant Care Tips -->
-            <div v-if="showTips" class="plant-tips relative top-10 rb text">
-              <div v-for="(tip, index) in plantTips" :key="index" class="tip">
-                <h3>{{ tip.title }}</h3>
+            <div v-if="showTips" class="plant-tips relative mt-3 ld:mt-14 text cardbg">
+              <div v-for="(tip, index) in plantTips" :key="index" class=" tip pl-3 pt-3 pb-3">
+                <h2 >{{ tip.title }}</h2>
                 <p>{{ tip.content }}</p>
               </div>
             </div>
@@ -23,20 +28,16 @@
             </div>
           </div>
         </transition>
-        <button @click="toggleNotes" class="widgetsbtn absolute top-2 right-2 lg:right-5 expand-button">
-          <div class="widgetsbtn__horizontal"></div>
-          <div class="widgetsbtn__vertical"></div>
-          My Notes
-        </button>
+        
       </div>
 
       <div>
-        <h2 class="text-2xl">
+        <h2 class="text-2xl mb-3">
           Upcoming Watering
         </h2>
         <div class="task-cards h-6/6 relative flex flex-col gap-3">
           <!-- Past Watering -->
-          <h2 :class="{ 'red-background': hasPastWateringPlants }" class="pl-3 text-lg text-justify  -top-0 bold">
+          <h2 :class="{ 'red-background': hasPastWateringPlants, 'error-message': hasPastWateringPlants }" class="pl-3 text-lg text-justify -top-0 ">
             Urgent
             <button class="absolute right-5" @click="isUrgentExpanded = !isUrgentExpanded">
               <span v-if="isUrgentExpanded">▲</span>
@@ -44,7 +45,7 @@
             </button>
           </h2>
           <div v-if="isUrgentExpanded"
-            class="task-container h-2/6 flex flex-col gap-5 cardbg flex-grow overflow-auto"
+            class="task-container h-2/6 flex flex-col invisible gap-5 cardbg flex-grow overflow-auto"
             :class="{ 'expanded': isUrgentExpanded, 'red-background': hasPastWateringPlants }">
             <ul>
               <li v-for="(plant, index) in pastWateringPlants" :key="index">
@@ -58,7 +59,7 @@
             </ul>
           </div>
           <!-- Plants to Water Today -->
-          <h2 :class="{ 'yellow-background': hasPlantsToWaterToday }" class="h2 pl-3 relative text-2lx bold">
+          <h2 :class="{ 'yellow-background': hasPlantsToWaterToday }" class="h2 pl-3  relative text-2lx bold">
             Water Today
             <button class="absolute right-5" @click="isWaterTodayExpanded = !isWaterTodayExpanded">
               <span v-if="isWaterTodayExpanded">▲</span>
@@ -109,9 +110,12 @@
           <ul class="countdown-card flex flex-col">
             <li class="flex flex-col relative p-2 capitalize" v-for="(plant, index) in sortedPlantsCountdown"
               :key="index">
-              <strong>{{ plant.common_name }}</strong> - Water in {{ getDaysUntilWatering(plant) }} days
-              <button class="absolute bottom-0 right-0" @click="markWateringAsDone(plant)">
-                <span> Water </span>
+              <strong>
+              {{ plant.plant_nickname }}
+              </strong> 
+             {{ plant.common_name }} <br>- Water next in {{ getDaysUntilWatering(plant) }} days
+              <button class="water-button absolute bottom-2 right-1" @click="markWateringAsDone(plant)">
+                <span > Water </span>
                 <svg class="waterdrop" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-5 -2 24 24">
                   <path fill="#D4D8EB"
                     d="M2 13a5 5 0 0 0 10 0c0-1.726-1.66-5.031-5-9.653C3.66 7.969 2 11.274 2 13zM7 0c4.667 6.09 7 10.423 7 13a7 7 0 0 1-14 0c0-2.577 2.333-6.91 7-13z" />
@@ -135,6 +139,18 @@ import { getCurrentUser } from '../auth';
 import { wateringTips } from '@/modules/planttips.js'; // Adjust the path based on your project structure
 
 let userId; // Define userId here.
+const plantTips = wateringTips;
+const db = getFirestore();
+const isUrgentExpanded = ref(false);
+const isWaterTodayExpanded = ref(false);
+const isWaterTomorrowExpanded = ref(false);
+const nextWateringDates = ref([]);
+const showNotes = ref(false);
+const showTips = ref(false);
+
+const hasPastWateringPlants = computed(() => pastWateringPlants.value.length > 0);
+const hasPlantsToWaterToday = computed(() => plantsToWaterToday.value.length > 0);
+const hasPlantsToWaterTomorrow = computed(() => plantsToWaterTomorrow.value.length > 0);
 
 const setUser = async () => {
   const user = await getCurrentUser();
@@ -158,15 +174,6 @@ onMounted(() => {
   });
 });
 
-const plantTips = wateringTips;
-const db = getFirestore();
-const isUrgentExpanded = ref(false);
-const isWaterTodayExpanded = ref(false);
-const isWaterTomorrowExpanded = ref(false);
-const nextWateringDates = ref([]);
-
-const showNotes = ref(false);
-const showTips = ref(false);
 
 
 
@@ -236,11 +243,10 @@ const updatePlantData = () => {
 const daysAgo = (lastWateredDate) => {
   const lastWatered = new Date(lastWateredDate);
   const currentDate = new Date();
-  const timeDiff = currentDate - lastWatered;
+  const timeDiff = currentDate - lastWatered; // Calculate time difference as current date minus lastWatered
   const daysAgo = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
   return `${daysAgo} days ago`;
 };
-
 const sortedPlantsCountdown = computed(() => {
   return [...userPlants.value].sort((a, b) => {
     const daysUntilWateringA = getDaysUntilWatering(a);
@@ -259,9 +265,7 @@ const toggleNotes = () => {
   showTips.value = false; // Close Plant Tips when opening Notes
 };
 
-const hasPastWateringPlants = computed(() => pastWateringPlants.value.length > 0);
-const hasPlantsToWaterToday = computed(() => plantsToWaterToday.value.length > 0);
-const hasPlantsToWaterTomorrow = computed(() => plantsToWaterTomorrow.value.length > 0);
+
 </script>
 
 <style lang="scss">
@@ -289,26 +293,20 @@ header {
 
 
 
-
-
-.main {
-
+.schedule {
+  .main {
   ul {
     box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     overflow: hidden;
-
   }
-
   display: flex;
   flex-direction: column;
-
-
 
   .tips-container {
     display: flex;
     justify-content: flex-end;
-
-
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+   
     .expand-button {
       cursor: pointer;
       transition: transform 0.3s;
@@ -322,7 +320,10 @@ header {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.5s;
+      box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+      
 
+      background-color: antiquewhite;
       .expand-fade-enter-active,
       .expand-fade-leave-active {
         transition: opacity 8s;
@@ -336,21 +337,45 @@ header {
 
   }
 }
+}
+
+
 
 h2 {
   font-family: $heading-font;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 4px;
   text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.3),
     -2px 0px 2px rgba(255, 255, 255, 0.3);
-  font-size: larger;
+  font-size: 1em;
   font-weight: 800;
+
+}
+
+
+.water-button {
+  display: block;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s;
+  span {
+    display: none;
+    position:absolute;
+    top: -40%;
+    right: 15%;
+  }
+  &:hover > span {
+    display: block;
+    transition: transform 0.3s;
+  }
+
 }
 
 .waterdrop {
 
   filter: drop-shadow(3px 1px 1px $water) drop-shadow(-2px 1px 1px $white) drop-shadow(0px 0px 5px #d1c5c568);
   transition: all 0.5s ease-in-out;
+
 
   &:hover {
     transition: all 0.5s ease-in-out;
