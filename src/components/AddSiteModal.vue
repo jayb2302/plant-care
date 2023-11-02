@@ -1,5 +1,5 @@
 <template>
-    <div class="modal mt-1 " @click="closeModal">
+    <div class="modal  " @click="closeModal">
       <!-- Modal content -->
       <div class="modal-content flex flex-col   " @click.stop>
         <h2 class="h2 text-3xl text-center">Select a Site</h2>

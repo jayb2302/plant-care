@@ -72,13 +72,13 @@
             </button>
           </h2>
           <div v-if="isWaterTodayExpanded"
-            class="task-container h-2/6 flex flex-col invisible gap-5 cardbg flex-grow overflow-auto"
+            class="task-container h-[20vh] flex flex-col invisible gap-5 cardbg flex-grow overflow-auto"
             :class="{ 'expanded': isWaterTodayExpanded, 'yellow-background': hasPlantsToWaterToday }">
             <ul>
               <li v-for="(plant, index) in plantsToWaterToday" :key="index">
                 <div class="relative shadow-md p-2">
                   <p class="justify text-md capitalize">
-                    <strong>{{ plant.common_name }}</strong>
+                    <strong>{{ plant.plant_nickname }}</strong>
                   </p>
                 </div>
               </li>
@@ -93,7 +93,7 @@
             </button>
           </h2>
           <div v-if="isWaterTomorrowExpanded"
-            class="task-container h-2/6 flex flex-col gap-5 cardbg invisible flex-grow overflow-auto"
+            class="task-container h-[20vh] flex flex-col gap-5 cardbg invisible flex-grow overflow-auto"
             :class="{ 'expanded': isWaterTomorrowExpanded, 'green-background': hasPlantsToWaterTomorrow }">
             <ul>
               <li v-for="(plant, index) in plantsToWaterTomorrow" :key="index">

@@ -11,7 +11,7 @@
             class="siteList cursor-pointer w-full  p-2 border-b-2 border-neutral-200 rounded-md  flex flex-grow justify-between "
             :class="{ 'bg-gray-200': selectedSite && selectedSite.id === site.id }"
           >
-            <h2 class=" pl-3  text-lg">{{ site.name }}</h2>
+            <h2 contenteditable="true" @input="editSiteName(site, $event)"    class=" pl-3  text-lg">{{ site.name }}</h2>
             <button  @click="confirmSiteDelete(site)" class="trash">
               <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="30" viewBox="0 0 32 32">
                 <path d="M 11 2 L 11 4 L 21 4 L 21 2 L 11 2 z M 4 6 L 4 8 L 28 8 L 28 6 L 4 6 z M 7.9921875 9.875 L 6.0078125 10.125 C 6.0078125 10.125 7 18.074074 7 27 L 7 28 L 25 28 L 25 27 C 25 18.074074 25.992188 10.125 25.992188 10.125 L 24.007812 9.875 C 24.007812 9.875 23.120303 17.398914 23.042969 26 L 8.9570312 26 C 8.8796974 17.398914 7.9921875 9.875 7.9921875 9.875 z M 12.986328 10.835938 L 11.013672 11.164062 C 11.013672 11.164062 12 17.111111 12 23 L 14 23 C 14 16.888889 12.986328 10.835936 12.986328 10.835938 z M 19.013672 10.835938 C 19.013672 10.835938 18 16.888889 18 23 L 20 23 C 20 17.111111 20.986328 11.164064 20.986328 11.164062 L 19.013672 10.835938 z"></path>
@@ -182,10 +182,9 @@ import { ref, onMounted, computed } from 'vue';
 import { db } from '../firebase.js';
 import { sites } from '../modules/sites.js';
 import { plants } from '../modules/plants.js';
-import { collection, getDocs, doc, deleteDoc, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc, query, where, onSnapshot, updateDoc } from 'firebase/firestore';
 import { getCurrentUser } from '../auth';
 import { useToast } from 'vue-toastification';
-
 
 const selectedSite = ref(null);
 const user = ref(null);
@@ -208,6 +207,12 @@ const loadSites = async () => {
   }
 };
 
+const editSiteName = async (site, event) => {
+      const newSiteName = event.target.textContent;
+
+      const siteDocRef = doc(db, 'sites', site.id);
+      await updateDoc(siteDocRef, { name: newSiteName });
+    };
 
 const loadPlants = async () => {
   // Fetch initial plants
@@ -335,6 +340,8 @@ const deletePlant = async () => {
 onMounted(async () => {
   loadSites();
   loadPlants();
+  return { loadSites, loadPlants };
+  
 });
 </script>
 

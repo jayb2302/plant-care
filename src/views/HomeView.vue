@@ -2,7 +2,7 @@
 <template>
   <main class="home-wrapper overflow-hidden">
     <div class="heading-container flex-col flex">
-      <div class="heading-bg absolute top-40 ">
+      <div class="heading-bg absolute top-32 md-top-40 ">
       </div>
       <div class="lg:w-6/12 absolute w-full top-40 md:top-32 md:left-0 ">
         <svg class="textdo  ">
@@ -13,7 +13,7 @@
       </div>
 
       <h1 class="-mt-4">Plant</h1>
-      <div class="lg:w-6/12 absolute w-full bottom-48 right-5 md:bottom-32 md:right-0">
+      <div class="lg:w-6/12 absolute w-full bottom-40 right-0 md:bottom-32 md:right-0">
         <svg class="">
           <text class="textcare" x="50%" y="40%" dy=".35em" text-anchor="middle">
             Care ?
@@ -210,7 +210,7 @@ nav {
   button {
     position: relative;
     height: 60px;
-    width: 20vw;
+    width: 10vw;
     font-size: 2em;
     font-weight: bold;
     color: $darkbeige;
@@ -221,6 +221,10 @@ nav {
     transition: all 0.5s;
     z-index: 4;
     font-family: $sub-heading-font;
+    @media (max-width: 768px) {
+      
+      width: 20vw;
+    }
 
     &::after {
       content: "";
@@ -249,7 +253,7 @@ nav {
       right: 20px;
       color: #2F5C2F;
       transform-origin: 100% 100%;
-      transform: rotate(-55deg) translateX(110%) translateY(5%);
+      transform: rotate(-55deg) translateX(120%) translateY(5%);
       z-index: -2;
       transition: all 0.5s;
     }
@@ -262,8 +266,8 @@ nav {
     .icon-2 {
       position: absolute;
       width: 15%;
-      top: 20px;
-      left: 10px;
+      top: 30px;
+      left: 12px;
       color: #2F5C2F;
       transform-origin: 100% 100%;
       z-index: -2;
@@ -273,7 +277,7 @@ nav {
     &:hover .icon-2 {
       width: 50%;
       top: -50px;
-      left: -80px;
+      left: -70px;
       transform: rotate(70deg);
       z-index: 1;
     }
