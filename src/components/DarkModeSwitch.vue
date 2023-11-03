@@ -1,22 +1,18 @@
-<template>
-    
+// Not yet working
+<template> 
     <label @click="toggleDark" class="ui-switch bg-slate-900 dark:bg-slate-500">
         <input type="checkbox" v-model="isDark">
         <div class="slider">
             <div class="circle w-50 h-50 bg-slate-400 "></div>
         </div>
     </label>
-    
 </template>
   
 <script setup>
-  import { useDark, useToggle  } from '@vueuse/core';
+import { useDark, useToggle  } from '@vueuse/core';
   
-  const isDark = useDark();
+const isDark = useDark();
     const toggleDark = useToggle(isDark);
- 
- 
-
 </script>
 
 <style lang="scss">

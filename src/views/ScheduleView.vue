@@ -1,7 +1,8 @@
 <template>
   <div class="schedule w-full ">
     <main class="shadow  pb-5 w-full mt-2 lg:flex justify-center lg:gap-5">
-      <!-- Tips & Notes -->
+
+      <!-- -- Tips & Notes -- -->
       <div class="btn-wrapper top-0 flex relative justify-center  gap-5">
         <button @click="toggleNotes" class="widgetsbtn relative    lg:fixed  lg:left-52 xl:left-32  expand-button">
           <div class="widgetsbtn__horizontal"></div>
@@ -17,22 +18,24 @@
       <div class="tips-container   relative h-[25vh] lg:h-[75vh] md:mt-5 lg:w-4/12 cardbg">
         <transition name="expand-fade" mode="out-in">
           <div v-if="showTips || showNotes" key="content">
-            <!-- Plant Care Tips -->
+
+            <!-- -- Plant Care Tips -- -->
             <div v-if="showTips" class="plant-tips mt-4 overflow-y-auto h-44  lg:h-[65vh] lg:mt-14 text cardbg divide-y-2">
               <div v-for="(tip, index) in plantTips" :key="index" class=" tip pl-3 pt-3 pb-3">
                 <h2 >{{ tip.title }}</h2>
                 <p>{{ tip.content }}</p>
               </div>
             </div>
-            <!-- Notes Component -->
+
+            <!-- -- Notes Component -- -->
             <div v-if="showNotes" class="notes-container relative  h-56 z-40 bottom-1">
               <AddUserNotes /> <!-- Render your notes component here -->
             </div>
           </div>
         </transition>
-        
       </div>
 
+      <!-- -- Water Schedule -- -->
       <div class="top-10 lg:mt-5  cardbg gradient z-40 mx-4 md:mb-1 mt-10 sticky ">
         <h2 class="text-md md:text-2xl pl-4 mb-3">
           Upcoming Watering
@@ -63,6 +66,7 @@
               </li>
             </ul>
           </div>
+
           <!-- Plants to Water Today -->
           <h2 :class="{ 'yellow-background': hasPlantsToWaterToday }" class="h2 pl-3  relative text-2lx bold">
             Water Today
@@ -84,6 +88,7 @@
               </li>
             </ul>
           </div>
+
           <!-- Plants to Water Tomorrow -->
           <h2 :class="{ 'green-background': hasPlantsToWaterTomorrow }" class="text-2lx pl-3 relative">
             Water Tomorrow
@@ -108,7 +113,7 @@
         </div>
       </div>
 
-      <!-- Column 5: Plants Countdown -->
+      <!-- Plants Overview Countdown -->
       <div class="countdown-container lg:w-4/12 mt-5 cardbg">
         <h2 class="text-2xl">Overview</h2>
         <div class="overflow-y-auto cardbg h-[60vh]  md:mt-5">
@@ -130,20 +135,22 @@
           </ul>
         </div>
       </div>
+
     </main>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
-import { calculateNextWateringDate } from '@/modules/nextWatering'
 import { getFirestore, doc, updateDoc } from 'firebase/firestore'
 import { plants, getPlantsData, pastWateringPlants, plantsToWaterToday, plantsToWaterTomorrow } from '@/modules/plants'
-import AddUserNotes from '../components/AddUserNotes.vue'
+import { calculateNextWateringDate } from '@/modules/nextWatering'
 import { getCurrentUser } from '../auth'
 import { wateringTips } from '@/modules/planttips.js'
 import { useToast } from 'vue-toastification'
+import AddUserNotes from '@/components/AddUserNotes.vue'
 
+// Initialize variables
 let userId; // Define userId here.
 const plantTips = wateringTips;
 const db = getFirestore();
@@ -153,35 +160,31 @@ const isWaterTomorrowExpanded = ref(false);
 const nextWateringDates = ref([]);
 const showNotes = ref(false);
 const showTips = ref(true);
+const userPlants = ref([]); 
 
-
+// Computed Properties
 const hasPastWateringPlants = computed(() => pastWateringPlants.value.length > 0);
 const hasPlantsToWaterToday = computed(() => plantsToWaterToday.value.length > 0);
 const hasPlantsToWaterTomorrow = computed(() => plantsToWaterTomorrow.value.length > 0);
 
+/// Fetch user-specific plants
 const setUser = async () => {
   const user = await getCurrentUser();
   if (user && user.uid) {
     userId = user.uid;
-    fetchUserPlants(); // Fetch user-specific plants when userId is available
+    fetchUserPlants();
   } else {
     console.error('User is not authenticated or user data is unavailable.');
   }
 };
-const userPlants = ref([]); // Initialize an empty array.
 
+
+// Fetch and update user-specific plant data
 const fetchUserPlants = () => {
   userPlants.value = plants.value.filter((plant) => plant.userId === userId);
 };
-onMounted(() => {
-  getPlantsData();
-  setUser(); // Set the user and fetch user-specific plants.
-  nextWateringDates.value = userPlants.value.map((plant) => {
-    return calculateNextWateringDate(plant.last_watered, plant.water_frequency);
-  });
-});
 
-// Function to calculate days until watering for a plant
+// Calculate days until watering for a plant
 const getDaysUntilWatering = (plant) => {
   const nextWateringDate = calculateNextWateringDate(plant.last_watered, plant.water_frequency).date;
   const currentDate = new Date();
@@ -189,6 +192,7 @@ const getDaysUntilWatering = (plant) => {
   return Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 };
 
+// Mark watering as done and update local data
 const markWateringAsDone = async (plant) => {
   const toast = useToast(); 
   const plantRef = doc(db, 'plants', plant.id);
@@ -242,13 +246,7 @@ const markWateringAsDone = async (plant) => {
   }
 };
 
-// Observing changes in the 'plants' ref
-watch(plants, () => {
-  // Update data when 'plants' changes
-  fetchUserPlants();
-  updatePlantData();
-});
-
+// Update data related to past, today, and tomorrow watering
 const updatePlantData = () => {
   const currentDate = new Date();
 
@@ -271,6 +269,7 @@ const updatePlantData = () => {
   });
 };
 
+// Calculate days ago from last watered date
 const daysAgo = (lastWateredDate) => {
   const lastWatered = new Date(lastWateredDate);
   const currentDate = new Date();
@@ -279,6 +278,7 @@ const daysAgo = (lastWateredDate) => {
   return `${daysAgo} days ago`;
 };
 
+// Sort user plants by days until watering
 const sortedPlantsCountdown = computed(() => {
   return [...userPlants.value].sort((a, b) => {
     const daysUntilWateringA = getDaysUntilWatering(a);
@@ -287,6 +287,23 @@ const sortedPlantsCountdown = computed(() => {
   });
 });
 
+// onMounted function
+onMounted(() => {
+  getPlantsData();
+  setUser(); // Set the user and fetch user-specific plants.
+  nextWateringDates.value = userPlants.value.map((plant) => {
+    return calculateNextWateringDate(plant.last_watered, plant.water_frequency);
+  });
+});
+
+// Watch for changes in 'plants' ref
+watch(plants, () => {
+  // Update data when 'plants' changes
+  fetchUserPlants();
+  updatePlantData();
+});
+
+// Toggle tips and notes
 const toggleTips = () => {
   showTips.value = !showTips.value;
   showNotes.value = false; // Close the Notes
@@ -318,12 +335,12 @@ header {
 
 .schedule {
   .main {
+    display: flex;
+    flex-direction: column;
     ul {
       box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
       overflow: hidden;
     }
-    display: flex;
-    flex-direction: column;
 
     .tips-container {
       display: flex;
@@ -356,7 +373,6 @@ header {
           opacity: 0;
         }
       }
-
     }
   }
 }

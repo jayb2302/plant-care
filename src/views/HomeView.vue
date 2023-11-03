@@ -96,7 +96,6 @@
                 <div class="leaf leaf2"></div>
                 <div class="leaf leaf3"></div>
                 <div class="leaf leaf4"></div>
-               
                 <div class="leaf leaf6"></div>
               </div>
               <!-- Render SignInModal.vue component here -->
@@ -307,9 +306,9 @@ nav {
     
 
     &.leaf2 {
-      top: 200px;
-      left: 5%;
-      transform: translatey(30px) rotate(30deg) translatey(-1);
+      top: 40px;
+      left: -300px;
+      transform: translatey(30px) rotate(30deg) translatey(-1) scale(3);
       animation: fadeIn 9s forwards, leafMovement2 3s infinite alternate 0.4s;
       background-image: url(../assets/img/leaf2.png);
       background-size: contain;
@@ -318,27 +317,27 @@ nav {
 
     &.leaf3 {
       top: 100px;
-      left: -8%;
-      transform:  scale(4);
+      right: -300px;
+      transform:  scale(2);
       animation: fadeIn 9s forwards, leafMovement3 3s infinite alternate 0.3s;
-      background-image: url(../assets/img/leaf2.png);
+      background-image: url(../assets/img/leaf6.png);
       background-size: contain;
   
     }
 
     &.leaf4 {
-      top: 500px;
-      left : 800px;
-      transform: translateX(-800px)  scale(2)  ;
-      animation: fadeIn 12s forwards, leafMovement4 30s infinite alternate 2s;
+      bottom: 20px;
+      left : 380px;
+      transform: translateX(400px)  scale(2)  ;
+      animation: fadeIn 25s forwards, leafMovement4 40s infinite alternate 1s;
       background-image: url(../assets/img/leaf4.png);
     }
 
     &.leaf5 {
       bottom: 200px;
-      left: 80%;
+      left: 200px;
       transform:   scale(2) ;
-      animation: fadeIn 8s forwards, leafMovement5 20s infinite alternate 1s;
+      animation: fadeIn 8s forwards, leafMovement5 40s infinite alternate 1s;
       background-image: url(../assets/img/leaf4.png);
     }
   }
@@ -416,23 +415,25 @@ nav {
 }
 @keyframes leafMovement3 {
   0% {
-    transform: scale(1);
+    transform: translateY(0);
   }
   50% {
-    transform: translate(-10px);
+    transform: translatey6(-5px);
   }
   100% {
-    transform: translateY(0) scaleY(1);
+    transform: translateY(0) ;
   }
 }
 
 @keyframes leafMovement4 {
   0% {
-    transform:  scale(4) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(200px);
+    transform:  scale(2) rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateX(30px) translateY(400px);
   }
- 
+  50% {
+    transform: translatey(500px), scale(2) ;
+  }
   100% {
-    transform: translatey(30px), scale(2);
+    transform: translatey(400px), scale(1) translateX(-400px);
   }
 }
 </style>

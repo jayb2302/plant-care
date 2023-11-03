@@ -1,12 +1,12 @@
 
 
-<template> 
+<template>
   <div id="app" class="">
-        <nav class="relative ">
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/signin">SignIn</RouterLink>
-          <RouterLink to="/adminpanel">Admin</RouterLink>
-        </nav>
+    <nav class="relative ">
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/signin">SignIn</RouterLink>
+      <RouterLink to="/adminpanel">Admin</RouterLink>
+    </nav>
   </div>
   <RouterView />
 </template>
@@ -14,17 +14,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 
-
-
-
 </script>
 
 <style scoped lang="scss">
-
-
 header {
   line-height: 1.5;
-  
+
 }
 
 
@@ -34,7 +29,7 @@ nav {
   text-align: center;
   position: relative;
   z-index: 2;
-  
+
 }
 
 nav a.router-link-exact-active {
@@ -59,7 +54,7 @@ nav a:first-of-type {
 //   header {
 //     display: flex;
 //     place-items: center;
-    
+
 //   }
 
 //   .logo {

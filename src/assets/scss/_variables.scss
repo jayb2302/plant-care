@@ -1,45 +1,43 @@
-
 /* Theme Colors */
-$white: #F2F2F2;
-$beige: #BFB6AE;
-$darkbeige: #40403F;
+$white: #f2f2f2;
+$beige: #bfb6ae;
+$darkbeige: #40403f;
 $black: #20201f;
 $darkerbeige: #595958;
-$lightgrayblue: #D2D7D9;
+$lightgrayblue: #d2d7d9;
 $lightgray: #d9d8d7d7;
-$darkergray: #A6A5A4;
-$darkgray:#595856;
-$vintagepink: #A67272;
-$darkerpink: #82615A;
-$darkpink:#463531;
+$darkergray: #a6a5a4;
+$darkgray: #595856;
+$vintagepink: #a67272;
+$darkerpink: #82615a;
+$darkpink: #463531;
 $pink: #c5978b;
 $lightpink: #d7ada7;
-$error: #6C302C ;
-$water: #859EAE ;
-$green: #9DBF21;
-$red: #C24A3C;
+$error: #6c302c;
+$water: #859eae;
+$green: #9dbf21;
+$red: #c24a3c;
 $yellow: #e8b705;
 
-$heading-text:#13130c;
-$subheading-text:rgb(43, 43, 36) ; 
+$heading-text: #13130c;
+$subheading-text: rgb(43, 43, 36);
 
-$modalbg:  rgba(213, 209, 209, 0.809);
-$modalcontentbg:  #8475669e;
-$signinbg:  rgba(213, 209, 209, 0.473);
+$modalbg: rgba(213, 209, 209, 0.809);
+$modalcontentbg: #8475669e;
+$signinbg: rgba(213, 209, 209, 0.473);
 $plantcardbg: rgba(213, 209, 209, 0.948);
-$input: #d0bcb79b ;
+$input: #d0bcb79b;
 $backhover: #342226;
 $focus: #7a93448a;
 
-$myBackground: hsla(30, 1%, 64%, 1) 
-              radial-gradient(at 86% 10%, hsla(28, 11%, 71%, 1) 0px, transparent 50%),
-              radial-gradient(at 92% 92%, hsla(60, 0%, 34%, 1) 0px, transparent 50%),
-              radial-gradient(at 59% 31%, hsla(0, 22%, 54%, 1) 0px, transparent 50%),
-              radial-gradient(at 3% 96%, hsla(197, 8%, 83%, 1) 0px, transparent 50%),
-              radial-gradient(at 60% 71%, hsla(7, 37%, 74%, 1) 0px, transparent 50%),
-              radial-gradient(at 27% 65%, hsla(60, 0%, 24%, 1) 0px, transparent 50%),
-              radial-gradient(at 4% 12%, hsla(28, 11%, 71%, 1) 0px, transparent 50%);
-
+$myBackground:
+  hsla(30, 1%, 64%, 1) radial-gradient(at 86% 10%, hsla(28, 11%, 71%, 1) 0px, transparent 50%),
+  radial-gradient(at 92% 92%, hsla(60, 0%, 34%, 1) 0px, transparent 50%),
+  radial-gradient(at 59% 31%, hsla(0, 22%, 54%, 1) 0px, transparent 50%),
+  radial-gradient(at 3% 96%, hsla(197, 8%, 83%, 1) 0px, transparent 50%),
+  radial-gradient(at 60% 71%, hsla(7, 37%, 74%, 1) 0px, transparent 50%),
+  radial-gradient(at 27% 65%, hsla(60, 0%, 24%, 1) 0px, transparent 50%),
+  radial-gradient(at 4% 12%, hsla(28, 11%, 71%, 1) 0px, transparent 50%);
 
 $heading-color: #30382d;
 
@@ -50,34 +48,34 @@ $title-font: 'fp-head-pro', sans-serif;
 $heading-size: 5rem;
 
 .success-message {
-    color: $focus;
-    text-shadow: 1px 1px 1px $black;
-    letter-spacing: 1px;
-    ::after {
-        content: "✔";
-        color: $green;
-        font-size: 1.5rem;
-        margin-left: 0.5rem;
-    }
+  color: $focus;
+  text-shadow: 1px 1px 1px $black;
+  letter-spacing: 1px;
+  ::after {
+    content: '✔';
+    color: $green;
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+  }
 }
 .error-message {
-    color: $red;
-    text-shadow: 1px 1px 1px $black;
-    letter-spacing: 1px;
-    animation: blink 2s infinite; /* Adjust the duration as needed */
+  color: $red;
+  text-shadow: 1px 1px 1px $black;
+  letter-spacing: 1px;
+  animation: blink 2s infinite; /* Adjust the duration as needed */
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
   }
-  
-  @keyframes blink {
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+  50% {
+    opacity: 0;
   }
+  100% {
+    opacity: 1;
+  }
+}
 
 .text-background {
   background-color: $darkbeige;
@@ -85,4 +83,3 @@ $heading-size: 5rem;
   font-family: $heading-text;
   text-transform: capitalize;
 }
-

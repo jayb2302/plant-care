@@ -2,7 +2,6 @@ import { ref } from 'vue';
 import { collection, onSnapshot, query, where} from 'firebase/firestore';
 import { db } from '../firebase.js';
 
-
 const users = ref([]);
 const userDataRef = collection(db, 'users');
 // In users.js
@@ -20,10 +19,5 @@ const getUsersData = (userId) => {
     });
   });
 };
-
-
-
-
-
 
 export { users, getUsersData};

@@ -38,16 +38,16 @@
           <ul v-if="isDropdownOpen"
             class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md cardbg py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             @click.stop>
-            <p> Hello {{ currentUser && currentUser.username ? currentUser.username : 'Loading...' }}</p>
-
-            <li @click="handleSignOut">Sign Out</li>
+            <p class=" cursor-none "> 
+              Hello {{ currentUser && currentUser.username ? currentUser.username : 'Loading...' }}
+            </p>
+            <li class=" cursor-pointer " @click="handleSignOut">Sign Out</li>
           </ul>
         </transition>
       </div>
     </div>
 
     <header class="shadow m-0 ">
-      
       <div class="modal-container mx-10">
         <Teleport to="body">
           <div class="modal-background">
@@ -99,17 +99,14 @@
       </TabPanels>
     </TabGroup>
 
-
     <div v-else class="flex-col  justify-center">
       <p class="p-tag text-center">Please log in to access this page.</p>
       <button id="btn-in" class="w-screen" @click="showSignInModal">Log In</button>
 
     <Teleport to="body">
-      <transition v-motion :initial="{
-              opacity: 0,
-              y: 0,
-            }" :variants="{ custom: { scale: 3 } }" :enter="{
-        opacity: 1,
+      <transition v-motion 
+        :initial="{ opacity: 0,y: 0,}" 
+        :variants="{ custom: { scale: 3 } }" :enter="{ opacity: 1,
         y: 0,
       }">
         <div class="modal" v-if="showModal">
@@ -223,7 +220,6 @@ onMounted(async () => {
       });
     }
   });
-
   document.addEventListener("click", closeDropdown);
 });
 
@@ -233,12 +229,6 @@ watch(isLoggedIn, (newIsLoggedIn) => {
   }
 });
 </script>
-
-
-
-
-
-
 
 <style lang="scss" scoped>
 nav {
@@ -250,22 +240,18 @@ h2 {
   font-size: 1.1rem;
   @media  screen and (max-width: 768px) {
     font-size: 0.8rem;
-    
   }
-  
 }
 
 .active {
   background-color: $focus;
   color: $white;
   border-radius: 10px;
-  
 }
 
 .nonActive {
   background-color: $white;
   color: $black;
   border-radius: 10px;
-  
 }
 </style>

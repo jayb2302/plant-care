@@ -7,11 +7,9 @@ import { useNextWateringDates } from './nextWateringUtils';
 
 const plants = ref([]);
 const plantDataRef = collection(db, 'plants');
-
 const pastWateringPlants = ref([]);
 const plantsToWaterToday = ref([]);
 const plantsToWaterTomorrow = ref([]);
-
 
 const getPlantsData = async () => {
   await onSnapshot(plantDataRef, (snapshot) => {
@@ -25,7 +23,6 @@ const getPlantsData = async () => {
   });
 };
 const { nextWateringDates } = useNextWateringDates();
-
 
 const fetchPlantsAndCalculateNextWateringDates = async () => {
   // Calculate next watering dates and categorize plants
